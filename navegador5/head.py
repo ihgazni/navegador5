@@ -458,7 +458,12 @@ def get_content_type_from_resp(resp):
 
 def get_rel_redirect_url_from_resp(resp):
     if(resp.status == 302):
-        return(resp.getheader('Location'))
+        loc = resp.getheader('Location')
+        if(loc):
+            return(loc)
+        loc = resp.getheader('location')
+        if(loc):
+            return(loc)
     else:
         return(None)
 
@@ -469,6 +474,14 @@ def get_abs_redirect_url_from_resp(resp,url):
     base_url = url_tool.get_base_url(url)
     if('Location' in resp_head_dict):
         loc = resp_head_dict['Location'][0]
+        regex = re.compile('^/')
+        m = regex.search(loc)
+        if(m):
+            return(''.join((base_url,loc)))
+        else:
+            return(loc)
+    elif('location' in resp_head_dict):
+        loc = resp_head_dict['location'][0]
         regex = re.compile('^/')
         m = regex.search(loc)
         if(m):
