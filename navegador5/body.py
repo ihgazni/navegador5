@@ -118,6 +118,11 @@ def build_body_string_from_kvlist(KL,KV):
     return(urllib.parse.urlencode(body))
     
 def decompress_resp_body(resp_body_bytes,resp_or_resp_head):
+    if(resp_or_resp_head == None):
+        print('----No Resp Received----')
+        return(b'')
+    else:
+        pass
     if(type(resp_or_resp_head) == type([])):
         resp_head = resp_or_resp_head
         ce = head.select_headers_via_key_from_tuple_list(resp_head,'Content-Encoding')
