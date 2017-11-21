@@ -171,7 +171,7 @@ def dict_to_url(url_dict):
     else:
         return(''.join((url_dict_template['scheme'],url_dict_template['sp_scheme_host'],url_dict_template['netloc'])))
     if('params' in url_dict):
-        url_dict_template.params = url_dict.params;
+        url_dict_template['params'] = url_dict.['params'];
     elif('params_dict' in url_dict):
         url_dict_template['params_dict'] = url_dict['params_dict'];
         url_dict_template['params'] = params_dict_urlencode(url_dict['params_dict']);
