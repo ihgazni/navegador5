@@ -128,7 +128,7 @@ def dict_to_url(url_dict):
         'sp_path_params':";",
         'params':"",
         'params_dict':{},
-        'sp_params_query':"/?",
+        'sp_params_query':"?",
         'query':"",
         'query_dict':{},
         'sp_query_fragment':"#",
