@@ -1,4 +1,5 @@
-
+from navegador5 import shell_cmd
+import os
 
 
 def write_to_file(**kwargs):
@@ -11,3 +12,16 @@ def read_file_content(**kwargs):
     rslt = fd.read()
     fd.close()
     return(rslt)
+
+
+#mkdir
+def mkdir(path,force=False):
+    if(os.path.exists(path)):
+        if(force):
+            shell_cmd.pipe_shell_cmds({1:'rm -r '+path})
+        else:
+            pass
+    else:
+        os.makedirs(path)
+
+

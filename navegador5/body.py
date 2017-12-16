@@ -11,6 +11,15 @@ import json
 
 
 
+#get_json
+def bytes_to_json(resp_body_bytes):
+    js = resp_body_bytes.decode('utf-8')
+    js = json.loads(js)
+    return(js)
+
+
+
+
 
 def encode_disposition_dict(disposition):
     return(head.concat_http_headers_and_body(disposition['headers'],disposition['body']))
