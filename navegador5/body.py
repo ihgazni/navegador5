@@ -8,6 +8,75 @@ import zlib
 import brotli
 #brotli = br
 import json
+from lxml import etree
+import lxml.html
+
+##
+def etree_is_leaf_node(node):
+    if(node.getchildren().__len__() == 0):
+        return(True)
+    else:
+        return(False)
+
+
+def etree_get_text(ele):
+    it = ele.itertext()
+    texts = list(it)
+    text = ''
+    for i in range(0,texts.__len__()):
+        text = text + texts[i]
+    return(text)
+
+
+def etree_path_array(node,include_self=1):
+    parr = [each.tag for each in node.iterancestors()]
+    parr.reverse()
+    if(include_self == 1):
+        parr.append(node.tag)
+    else:
+        pass
+    return(parr)
+
+
+def etree_patharray_to_xpathstr(path_array):
+    xpath_str = '/'
+    for each in path_array:
+        xpath_str = xpath_str + '/' + each
+    return(xpath_str)
+
+
+
+def etree_ancestor_depth(node,include_self=1):
+    d = etree_path_array(node).__len__()
+    if(include_self == 1):
+        return(d)
+    else:
+        return(d-1)
+
+
+def etree_descedants_depth(node,withpathinfo=0):
+    depth = 0
+    unhandled = [node]
+    next_unhandled = []
+    while(unhandled.__len__()>0):
+        depth = depth + 1
+        results = []
+        for i in range(0,unhandled.__len__()):
+            each_node = unhandled[i]
+            children = each_node.getchildren()
+            if(children.__len__() == 0):
+                patharr = etree_path_array(each_node,include_self=1)
+                results.append(patharr)
+            else:
+                next_unhandled = next_unhandled + children
+        unhandled = next_unhandled
+        next_unhandled = []
+    if(withpathinfo):
+        return({'depth':depth, 'paths':results})
+    else:
+        return(depth)
+
+
 
 
 
