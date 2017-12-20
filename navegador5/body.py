@@ -79,6 +79,38 @@ def etree_descedants_depth(node,withpathinfo=0):
 
 
 
+def etree_siblings_info(node):
+    parent = node.getparent()
+    children = parent.getchildren()
+    total = children.__len__()
+    for i in range(0,total):
+        if(node == children[i]):
+            curr_seq = i
+        else:
+            pass
+    return({'total':total,'seq':curr_seq,'parent':parent,'silbings':children})
+
+def etree_get_sibling(node,which,backwards=1):
+    parent = node.getparent()
+    children = parent.getchildren()
+    total = children.__len__()
+    for i in range(0,total):
+        if(node == children[i]):
+            curr_seq = i
+        else:
+            pass
+    if(backwords):
+        seq = curr_seq - which
+    else:
+        seq = curr_seq + which
+    if((seq <0) | (seq > (total - 1))):
+        return(None)
+    else:
+        return(children[seq])
+
+
+
+
 
 #get_json
 def bytes_to_json(resp_body_bytes):
