@@ -110,6 +110,12 @@ def etree_get_sibling(node,which,backwards=1):
 
 
 
+def etree_get_ancestor(node,previous):
+    ances = node.getparent()
+    for i in range(1,previous):
+        ances = ances.getparent()
+    return(ances)
+
 
 
 #get_json
