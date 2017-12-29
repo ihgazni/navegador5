@@ -140,16 +140,38 @@ def linux_manual_close_conn(conn,keepalive_timeout):
         print('TCP STATE {0} ,IMPLICIT CONN RESP MODE, CLOSE CONN'.format(r_TCP_state))
         conn.close()
 
+####
+class RespError(Exception):
+    pass
+
+class RespHeadError(Exception):
+    pass
+
+class RespBodyError(Exception):
+    pass
+####
+
 def stepping_resp(conn,explicit_keepalive=0):
     try:
         resp = conn.getresponse()
-        resp_head = resp.getheaders()
     except Exception as e:
         print("----resp Exception-----")
         print("Exception: ")
         print(e)
         print("----resp Exception-----")
-        return((conn,[],None,None))
+        #return((conn,[],None,None))
+        raise RespError()
+    else:
+        pass
+    try:
+        resp_head = resp.getheaders()
+    except Exception as e:
+        print("----resp_head Exception-----")
+        print("Exception: ")
+        print(e)
+        print("----resp_head Exception-----")
+        #return((conn,[],None,None))
+        raise RespHeadError()
     else:
         pass
     try:
@@ -160,10 +182,11 @@ def stepping_resp(conn,explicit_keepalive=0):
         print(e)
         print("resp_head: ")
         print(resp_head)
-        resp_body_bytes = None
+        #resp_body_bytes = None
         print("resp_body_bytes: ")
         print(resp_body_bytes)
         print("----resp_body Exception-----")
+        raise RespBodyError()
     else:
         pass
     #
