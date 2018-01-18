@@ -105,11 +105,11 @@ def stepping_req(conn,method,url_path,**kwargs):
         req_body = None
     if(method == "GET"):
         if(type(req_body)==type({})):
-            req_body = url_path.urlencode(req_body)
+            req_body = url_tool.urlencode(req_body)
             url_path = ''.join((url_path,"?",req_body))
     if(method == "POST"):
         if(type(req_body)==type({})):
-            req_body = url_path.urlencode(req_body)
+            req_body = url_tool.urlencode(req_body)
     try:
         conn.request(method,url_path,headers=req_head_dict,body=req_body)
     except Exception as e:
