@@ -250,7 +250,15 @@ def params_dict_urlencode(decoded_dict,sp=";"):
     return(rslt_str)
     
 
-def urldecode(encoded_str,sp="&"):
+def urldecode(encoded_str,**kwargs):
+    if('quote_plus' in kwargs):
+        quote_plus=kwargs['quote_plus']
+    else:
+        quote_plus=True
+    if('sp' in kwargs):
+        sp=kwargs['sp']
+    else:
+        sp="&"
     eles = encoded_str.split(sp)
     eles_len = eles.__len__()
     r1 = {}
@@ -260,17 +268,32 @@ def urldecode(encoded_str,sp="&"):
             kv_arr = kv.split("=")
             k=kv_arr[0]
             v=kv_arr[1]
-            k=urllib.parse.unquote(k)
-            v=urllib.parse.unquote(v)
+            if(quote_plus):
+                k=urllib.parse.unquote_plus(k)
+                v=urllib.parse.unquote_plus(v)
+            else:
+                k=urllib.parse.unquote(k)
+                v=urllib.parse.unquote(v)     
             r1[k] = v
         else:
             k = kv
             v = {}
-            k=urllib.parse.unquote(k)
+            if(quote_plus):
+                k=urllib.parse.unquote_plus(k)
+            else:
+                k=urllib.parse.unquote(k)
             r1[k] = v
     return(r1)
 
-def urlencode(decoded_dict,sp="&"):
+def urlencode(decoded_dict,**kwargs):
+    if('quote_plus' in kwargs):
+        quote_plus=kwargs['quote_plus']
+    else:
+        quote_plus=True
+    if('sp' in kwargs):
+        sp=kwargs['sp']
+    else:
+        sp="&"
     eles = decoded_dict
     eles_len = eles.__len__()
     r1_dict = {}
@@ -284,5 +307,9 @@ def urlencode(decoded_dict,sp="&"):
     rslt_str = ''.join((rslt_str,r2_str))
     rslt_str = rslt_str.lstrip(sp)
     rslt_str = rslt_str.replace("&",sp)
+    if(quote_plus):
+        pass
+    else:
+        rslt_str = rslt_str.replace("+","%20")
     return(rslt_str)
     

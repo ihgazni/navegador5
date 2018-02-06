@@ -2,6 +2,13 @@ import operator
 import re
 from navegador5 import url_tool
 
+#query post body
+post_querydict_to_querystr = url_tool.urlencode
+post_querystr_to_querydict = url_tool.urldecode
+
+
+
+
 #resp 
 #resp_head = resp.getheaders()  tuple_list
 #resp_body_bytes = resp.read()
