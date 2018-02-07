@@ -8,6 +8,16 @@ import html
 import http.cookiejar
 import http.cookies
 
+
+def in_ignoreUpper(lora,key):
+    for each in lora:
+        if(key.lower() == each.lower()):
+            return((True,each))
+        else:
+            pass
+    return((False,None))
+    
+
 def get_cookie_eles_from_cookie_str(cookie_str):
     cookie_str = cookie_str.replace("Cookie: ","")
     eles = cookie_str.split('; ')
@@ -248,7 +258,7 @@ def decode_resp_set_cookie(set_cookie_tuple):
         m_ck_attr = regex_ck_attr.search(kv)
         m_kv = regex_kv.search(kv)
         if(m_ck_attr==None):
-            rslt['cookie'] = kv
+            rslt['Cookie'] = kv
         else:
             if(m_kv == None):
                 key = kv
@@ -294,14 +304,16 @@ def http_cookie_overdue(cookie_dict):
 # session is over" (as defined by the user agent).
     rslt = {}
     rslt['errors'] = []
-    if('Max-Age' in cookie_dict):
+    cond,key = in_ignoreUpper(cookie_dict,'Max-Age')
+    if(cond):
         #not supported full feature
-        if(int(cookie_dict['Max-Age']) <= 0):
-            rslt['errors'].append('Max-Age')
+        if(int(cookie_dict[key]) <= 0):
+            rslt['errors'].append(key)
     else:
-        if('Expires' in cookie_dict):
-            if(http_cookie_expired(cookie_dict['Expires'])):
-                rslt['errors'].append('Expires')
+        cond,key = in_ignoreUpper(cookie_dict,'Expires')
+        if(cond):
+            if(http_cookie_expired(cookie_dict[key])):
+                rslt['errors'].append(key)
     if(rslt['errors'].__len__() == 0):
         rslt['valid'] = 1
     else:
@@ -341,8 +353,9 @@ def http_cookie_outof_domain(cookie_dict,**kwargs):
     to_url = kwargs['to_url']
     origin_server = urllib.parse.urlparse(from_url).netloc
     to_domain = urllib.parse.urlparse(to_url).netloc
-    if('Domain' in cookie_dict):
-        domain = cookie_dict['Domain'].lstrip('.')
+    cond,key = in_ignoreUpper(cookie_dict,'Domain')
+    if(cond):
+        domain = cookie_dict[key].lstrip('.')
         regex_str = ''.join((domain,'$'))
         regex_domain = re.compile(regex_str)
         if(regex_domain.search(to_domain) == None):
@@ -393,8 +406,9 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
 ####
     from_netloc = from_attribs.netloc
     to_netloc = to_attribs.netloc
-    if('Domain' in cookie_dict):
-        domain = cookie_dict['Domain'].replce(' ',"")
+    cond,key = in_ignoreUpper(cookie_dict,'Domain')
+    if(cond):
+        domain = cookie_dict[key].replce(' ',"")
         if(domain == ''):
             domain = None
         else:
@@ -402,7 +416,12 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
     else:
         domain = None
     if(domain):
-        regex_dom = re.compile(domain+'$')
+        regex_str = domain
+        regex_str.replace('\\',"\\\\")
+        regex_set = {'.','^','$','*','+','?','{','}','[',']','(',')','|'}
+        for each in regex_set:
+            regex_str = regex_str.replace(each,"\\"+each)
+        regex_dom = re.compile(regex_str+'$')
         m = regex_dom.search(to_netloc)
         if(m):
             pass
@@ -425,8 +444,9 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
         to_path = '/'
     else:
         pass
-    if('Path' in cookie_dict):
-        path = cookie_dict['Path']
+    cond,key = in_ignoreUpper(cookie_dict,'Path')
+    if(cond):
+        path = cookie_dict[key]
     else:
         path = from_path
     if(path == ''):
@@ -544,7 +564,7 @@ def select_valid_cookies_from_resp(req_head,resp_head,from_url,to_url,return_dic
     for i in range(0,arr_cookies_len):
         if(is_cookie_valid_for_send(arr_cookies[i],from_url,to_url)):
             full_cookie_dict = decode_resp_set_cookie(arr_cookies[i])
-            cookie_str = full_cookie_dict['cookie']
+            cookie_str = full_cookie_dict['Cookie']
             cookie_dict = head.decode_one_http_head('Cookie',';',cookie_str,ordered=0)
             del cookie_dict[' ']
             new_ck_dict.update(cookie_dict)
