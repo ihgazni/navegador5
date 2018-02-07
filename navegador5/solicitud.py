@@ -320,6 +320,8 @@ def walkon(info_container,**kwargs):
         auto_update_cookie = kwargs['auto_update_cookie']
     else:
         auto_update_cookie = 1
+    print("--auto_update_cookie--")
+    print(auto_update_cookie)
     if(auto_update_cookie):
         from_url = url
         if('to_url' in kwargs):
@@ -329,13 +331,18 @@ def walkon(info_container,**kwargs):
         next_req_cookie_dict = cookie.select_valid_cookies_from_resp(req_head,resp_head,from_url,to_url)
         next_req_cookie_str = cookie.cookie_dict_to_str(next_req_cookie_dict,with_head=0)
         ####
+        print("-----next_req_cookie_str----")
         print(next_req_cookie_str)
         ####
         if(next_req_cookie_str ==""):
             pass
         else:
+            print("---req_head---")
+            print(req_head)
+            print("---req_head_type---")
             print(type(req_head))
             if(type(req_head) == type({})):
+                print('here')
                 req_head['Cookie'] = next_req_cookie_str
             elif(type(req_head) == type('')):
                 req_head_dict = head.build_headers_dict_from_str(req_head)
