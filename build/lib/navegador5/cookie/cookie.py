@@ -511,10 +511,7 @@ def cookies_tuple_list_to_cookies_dict_list(arr_cookies):
     arr_cookies_len = arr_cookies.__len__()
     for i in range(0,arr_cookies_len):
         full_cookie_dict = decode_resp_set_cookie(arr_cookies[i])
-        cookie_str = full_cookie_dict['cookie']
-        cookie_dict = head.decode_one_http_head('Cookie',';',cookie_str,ordered=0)
-        del cookie_dict[' ']
-        cks_dl.append(cookie_dict)
+        cks_dl.append(full_cookie_dict)
     return(cks_dl)
 
 
