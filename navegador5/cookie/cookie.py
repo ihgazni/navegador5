@@ -366,13 +366,61 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
    # paths within a given host, the Path attribute cannot be relied upon
    # for security (see Section 8).
     from_url = kwargs['from_url']
-    from_path = urllib.parse.urlparse(from_url).path
     to_url = kwargs['to_url']
-    to_path = urllib.parse.urlparse(to_url).path
+    from_attribs = urllib.parse.urlparse(from_url)
+    to_attribs = urllib.parse.urlparse(to_url)
+    ####
+    from_scheme = from_attribs.scheme
+    to_scheme = to_attribs.scheme
+    if(from_scheme == to_scheme):
+        pass
+    else:
+        return(0)
+####
+#6.   If the domain-attribute is non-empty:
+#           If the canonicalized request-host does not domain-match the           domain-attribute:
+#              Ignore the cookie entirely and abort these steps.
+#           Otherwise:
+#              Set the cookie’s host-only-flag to false.
+#              Set the cookie’s domain to the domain-attribute.
+#        Otherwise:
+#           Set the cookie’s host-only-flag to true.
+#           Set the cookie’s domain to the canonicalized request-host.
+####
+    from_netloc = from_attribs.netloc
+    to_netloc = to_attribs.netloc
+    if('Domain' in cookie_dict):
+        domain = cookie_dict['Domain'].replce(' ',"")
+        if(domain = ''):
+            domain = None
+        else:
+            pass
+    else:
+        domain = None
+    if(domain):
+        regex_dom = re.compile(domain+'$')
+        m = regex_dom.search(to_netloc)
+        if(m):
+            pass
+        else:
+            return(0)
+    else:
+        #host-only-flag
+        if(from_netloc == to_netloc):
+            pass
+        else:
+            return(0)
+    ####
+    from_path = from_attribs.path
+    to_path = to_attribs.path
     if('Path' in cookie_dict):
         path = cookie_dict['Path']
     else:
         path = from_path
+    if(path == ''):
+        path = '/'
+    else:
+        pass
     regex_str = ''.join(('^',path))
     regex_path = re.compile(regex_str)
     if(regex_path.search(to_path) == None):

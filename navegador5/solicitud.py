@@ -327,30 +327,30 @@ def walkon(info_container,**kwargs):
         else:
             to_url = from_url
         ##
-        print("---------")
-        print(req_head)
-        print("---------")
-        print(resp_head)
-        print("---------")
-        print(from_url)
-        print("---------")
-        print(to_url)
-        print("---------")
+        ##print("---------")
+        ##print(req_head)
+        ##print("---------")
+        ##print(resp_head)
+        ##print("---------")
+        ##print(from_url)
+        ##print("---------")
+        ##print(to_url)
+        ##print("---------")
         ##
         next_req_cookie_dict = cookie.select_valid_cookies_from_resp(req_head,resp_head,from_url,to_url)
         next_req_cookie_str = cookie.cookie_dict_to_str(next_req_cookie_dict,with_head=0)
         ####
-        print(next_req_cookie_dict)
-        print("---------")
-        print(next_req_cookie_str)
+        ##print(next_req_cookie_dict)
+        ##print("---------")
+        ##print(next_req_cookie_str)
         ####
         if(next_req_cookie_str ==""):
             pass
         else:
-            print("---req_head---")
-            print(req_head)
-            print("---req_head_type---")
-            print(type(req_head))
+            ##print("---req_head---")
+            ##print(req_head)
+            ##print("---req_head_type---")
+            ##print(type(req_head))
             if(type(req_head) == type({})):
                 print('here')
                 req_head['Cookie'] = next_req_cookie_str
