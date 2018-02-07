@@ -215,6 +215,7 @@ def stepping_resp(conn,explicit_keepalive=0):
 
 
 def walkon(info_container,**kwargs):
+    '''by default auto_update_cookie enabled'''
     step = info_container['step']
     url = info_container['url']
     method = info_container['method']
@@ -327,9 +328,13 @@ def walkon(info_container,**kwargs):
             to_url = from_url
         next_req_cookie_dict = cookie.select_valid_cookies_from_resp(req_head,resp_head,from_url,to_url)
         next_req_cookie_str = cookie.cookie_dict_to_str(next_req_cookie_dict,with_head=0)
+        ####
+        print(next_req_cookie_str)
+        ####
         if(next_req_cookie_str ==""):
             pass
         else:
+            print(type(req_head))
             if(type(req_head) == type({})):
                 req_head['Cookie'] = next_req_cookie_str
             elif(type(req_head) == type('')):
