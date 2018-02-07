@@ -391,7 +391,7 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
     to_netloc = to_attribs.netloc
     if('Domain' in cookie_dict):
         domain = cookie_dict['Domain'].replce(' ',"")
-        if(domain = ''):
+        if(domain == ''):
             domain = None
         else:
             pass
