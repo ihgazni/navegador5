@@ -423,6 +423,8 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
         pass
     regex_str = ''.join(('^',path))
     regex_path = re.compile(regex_str)
+    print(regex_path)
+    print(to_path)
     if(regex_path.search(to_path) == None):
         return(1)
     else:
