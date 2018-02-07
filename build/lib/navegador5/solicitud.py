@@ -19,7 +19,7 @@ def new_info_container():
         'req_body': None, 
         'method':None,
         'url': None, 
-        'prev_url':None,
+        'from_url':None,
         'step': 0, 
         'conn': None,
         'auto_update_cookie':0,
