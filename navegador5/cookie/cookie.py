@@ -284,6 +284,9 @@ def http_cookie_expired(expire):
 
 
 def http_cookie_overdue(cookie_dict):
+#4.1.2.2.  The Max-Age Attribute
+#   The Max-Age attribute indicates the maximum lifetime of the cookie,   represented as the number of seconds until the cookie expires.  The   user agent is not required to retain the cookie for the specified   duration.  In fact, user agents often evict cookies due to memory   pressure or privacy concerns.
+
 # If a cookie has both the Max-Age and the Expires attribute, the Max-
 # Age attribute has precedence and controls the expiration date of the
 # cookie.  If a cookie has neither the Max-Age nor the Expires
@@ -292,6 +295,7 @@ def http_cookie_overdue(cookie_dict):
     rslt = {}
     rslt['errors'] = []
     if('Max-Age' in cookie_dict):
+        #not supported full feature
         if(int(cookie_dict['Max-Age']) <= 0):
             rslt['errors'].append('Max-Age')
     else:
@@ -370,12 +374,12 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
     from_attribs = urllib.parse.urlparse(from_url)
     to_attribs = urllib.parse.urlparse(to_url)
     ####
-    from_scheme = from_attribs.scheme
-    to_scheme = to_attribs.scheme
-    if(from_scheme == to_scheme):
-        pass
-    else:
-        return(0)
+    #from_scheme = from_attribs.scheme
+    #to_scheme = to_attribs.scheme
+    #if(from_scheme == to_scheme):
+    #    pass
+    #else:
+    #    return(0)
 ####
 #6.   If the domain-attribute is non-empty:
 #           If the canonicalized request-host does not domain-match the           domain-attribute:
@@ -429,10 +433,13 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
         path = '/'
     else:
         pass
-    regex_str = ''.join(('^',path))
+    regex_str = path
+    regex_str = regex_str.replace('\\',"\\\\")
+    regex_set = {'.','^','$','*','+','?','{','}','[',']','(',')','|'}
+    for each in regex_set:
+        regex_str = regex_str.replace(each,"\\"+each)
+    regex_str = '^'+regex_str
     regex_path = re.compile(regex_str)
-    #print(regex_path)
-    #print(to_path)
     if(regex_path.search(to_path) == None):
         return(1)
     else:
@@ -442,8 +449,9 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
  
 
 def http_cookie_only_for_https(cookie_dict,**kwargs):
-    to_url = kwargs['to_url']
-    url_scheme = urllib.parse.urlparse(to_url).scheme
+#4.1.2.5.  The Secure Attribute
+#   The Secure attribute limits the scope of the cookie to "secure"   channels (where "secure" is defined by the user agent).  When a   cookie has the Secure attribute, the user agent will include the   cookie in an HTTP request only if the request is transmitted over a   secure channel (typically HTTP over Transport Layer Security (TLS)   [RFC2818]).
+#   Although seemingly useful for protecting cookies from active network   attackers, the Secure attribute protects only the cookie’s   confidentiality.  An active network attacker can overwrite Secure   cookies from an insecure channel, disrupting their integrity (see   Section 8.6 for more details).
     regex_secure = re.compile("Secure",re.I)
     secure_inside = 0
     for key in cookie_dict:
@@ -452,13 +460,7 @@ def http_cookie_only_for_https(cookie_dict,**kwargs):
         else:
             secure_inside = 1
             break
-    if(secure_inside == 0):
-        return(1)
-    else:
-        if(url_scheme == "https"):
-            return(1)
-        else:
-            return(0)
+    return(secure_inside)
 
 def http_cookie_not_for_apps(cookie_dict,**kwargs):
     regex_http_only = re.compile("HttpOnly",re.I)
@@ -475,7 +477,15 @@ def is_cookie_valid_for_send(set_cookie_tuple,from_url,to_url):
     not_overdue = http_cookie_overdue(cookie_dict)['valid']
     in_domain = not(http_cookie_outof_domain(cookie_dict,from_url=from_url,to_url=to_url))
     in_path = not(http_cookie_outof_path(cookie_dict,from_url=from_url,to_url=to_url))
-    ok_scheme = http_cookie_only_for_https(cookie_dict,to_url=to_url)
+    secure_only = http_cookie_only_for_https(cookie_dict,to_url=to_url)
+    url_scheme = urllib.parse.urlparse(to_url).scheme
+    if(secure_only):
+        if(url_scheme == "https"):
+            ok_scheme = 1
+        else:
+            ok_scheme = 0
+    else:
+        ok_scheme = 1
     if(not_overdue & in_domain & in_path & ok_scheme):
         return(1)
     else:
