@@ -13,7 +13,7 @@ from navegador5.cookie import cookie
 def new_info_container():
     info_template = {
         'resp':None,
-        'resp_head': None, 
+        'resp_head': [], 
         'resp_body_bytes': None, 
         'req_head': None, 
         'req_body': None, 
