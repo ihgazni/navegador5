@@ -387,6 +387,7 @@ def walkon(info_container,**kwargs):
     method = info_container['method']
     conn = info_container['conn']
     req_head = info_container['req_head']
+    resp_head = info_container['resp_head']
     #--------------------------------加入cookie处理-------
     if('auto_update_cookie' in kwargs):
         auto_update_cookie = kwargs['auto_update_cookie']
