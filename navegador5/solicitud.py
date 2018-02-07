@@ -352,7 +352,6 @@ def walkon(info_container,**kwargs):
             ##print("---req_head_type---")
             ##print(type(req_head))
             if(type(req_head) == type({})):
-                print('here')
                 req_head['Cookie'] = next_req_cookie_str
             elif(type(req_head) == type('')):
                 req_head_dict = head.build_headers_dict_from_str(req_head)
