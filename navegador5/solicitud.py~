@@ -19,6 +19,7 @@ def new_info_container():
         'req_body': None, 
         'method':None,
         'url': None, 
+        'prev_url':None,
         'step': 0, 
         'conn': None,
         'auto_update_cookie':0,
@@ -214,9 +215,12 @@ def stepping_resp(conn,explicit_keepalive=0):
     return((conn,resp_head,resp_body_bytes,resp))
 
 
-def walkon(info_container,**kwargs):
+def obseleted_walkon(info_container,**kwargs):
     '''by default auto_update_cookie enabled'''
     step = info_container['step']
+    ####
+    #from_url = info_container['from_url']
+    ####
     url = info_container['url']
     method = info_container['method']
     conn = info_container['conn']
@@ -321,7 +325,7 @@ def walkon(info_container,**kwargs):
     else:
         auto_update_cookie = 1
     if(auto_update_cookie):
-        from_url = url
+        #from_url = url
         if('to_url' in kwargs):
             to_url = kwargs['to_url']
         else:
@@ -365,6 +369,169 @@ def walkon(info_container,**kwargs):
         info_container['auto_update_cookie'] = 0
     #--------------------------------加入cookie处理-------
     return(info_container)
+
+
+
+
+
+
+
+
+
+
+
+def walkon(info_container,**kwargs):
+    '''by default auto_update_cookie enabled'''
+    step = info_container['step']
+    from_url = info_container['from_url']
+    url = info_container['url']
+    #for the first request
+    if(from_url == None):
+        from_url = url
+    else:
+        pass
+    to_url = url
+    method = info_container['method']
+    conn = info_container['conn']
+    req_head = info_container['req_head']
+    #--------------------------------加入cookie处理-------
+    if('auto_update_cookie' in kwargs):
+        auto_update_cookie = kwargs['auto_update_cookie']
+    else:
+        auto_update_cookie = 1
+    if(auto_update_cookie):
+        next_req_cookie_dict = cookie.select_valid_cookies_from_resp(req_head,resp_head,from_url,to_url)
+        next_req_cookie_str = cookie.cookie_dict_to_str(next_req_cookie_dict,with_head=0)
+        if(next_req_cookie_str ==""):
+            pass
+        else:
+            if(type(req_head) == type({})):
+                req_head['Cookie'] = next_req_cookie_str
+            elif(type(req_head) == type('')):
+                req_head_dict = head.build_headers_dict_from_str(req_head)
+                req_head_dict['Cookie'] = next_req_cookie_str
+                req_head = head.build_headers_str_from_dict(req_head_dict)
+            else:
+                pass
+        info_container['req_head'] = req_head
+        info_container['auto_update_cookie'] = 1
+    else:
+        info_container['auto_update_cookie'] = 0
+    #--------------------------------加入cookie处理-------
+
+    #body is string or bytes
+    req_body = info_container['req_body']
+    if(info_container['method'] == 'GET'):
+        try:
+            del info_container['req_head']['Content-Type']
+            del info_container['req_head']['Content-Length']
+        except:
+            pass
+        else:
+            pass
+        info_container['req_body'] = None
+    else:
+        pass
+    if('save_scripts' in kwargs):
+        save_scripts = kwargs['save_scripts']
+    else:
+        save_scripts = 0
+    if('explicit_keepalive' in kwargs):
+        explicit_keepalive = kwargs['explicit_keepalive']
+    else:
+        explicit_keepalive = 0
+    url_scheme = urllib.parse.urlparse(url).scheme
+    url_Netloc = urllib.parse.urlparse(url).netloc
+    if('default_port' in kwargs):
+        default_port = kwargs['default_port']
+    else:
+        if('https' in url_scheme):
+            default_port = 443
+        elif('http' in url_scheme):
+            default_port = 80
+        else:
+            default_port = None
+    url_NL_HP = url_tool.parse_url_netloc(url_Netloc,default_port)
+    url_host = url_NL_HP[0]
+    url_port = url_NL_HP[1]
+    url_path = urllib.parse.urlparse(url).path
+    url_Params = urllib.parse.urlparse(url).params
+    url_Query = urllib.parse.urlparse(url).query
+    url_Fragment = urllib.parse.urlparse(url).fragment
+    if('upgrade_records' in kwargs):
+        upgrade_records = kwargs['upgrade_records']
+    else:
+        upgrade_records = 1
+    if(upgrade_records):
+        if('records_container' in kwargs):
+            records_container = kwargs['records_container']
+        else:
+            records_container = new_records_container()
+        records_container['steps'][step] = step
+        records_container['urls'][step] = url
+        if('Referer' in info_container['req_head']):
+            records_container['referers'][step] = info_container['req_head']['Referer']
+    else:
+        pass
+    if('port' in kwargs):
+        port = kwargs['port']
+    else:
+        port = None
+    if('timeout' in kwargs):
+        timeout = kwargs['timeout']
+    else:
+        timeout = 30
+    if(step == 0):
+        conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
+    else:
+        if(conn.sock == None):
+            conn.close()
+            conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
+        else:
+            if(conn==None):
+                conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
+            else:
+                conn = conn
+    #encode_chunked only supportted in python3.6
+    if('encode_chunked' in kwargs):
+        encode_chunked = kwargs['encode_chunked']
+    else:
+        encode_chunked = False
+    if(url_Query == ''):
+        conn = stepping_req(conn,method,url_path,req_head=req_head,req_body=req_body)
+    else:
+        conn = stepping_req(conn,method,url_path+'?'+url_Query,req_head=req_head,req_body=req_body)
+    conn,resp_head,resp_body_bytes,resp = stepping_resp(conn,explicit_keepalive=explicit_keepalive)
+    resp_body_bytes = body.decompress_resp_body(resp_body_bytes,resp)
+    if(save_scripts):
+        body.findall_jscript_from_resp_body(resp_body_bytes,'s{0}'.format(step))
+    else:
+        pass
+    step = step + 1
+    info_container['step'] = step
+    info_container['conn'] = conn
+    info_container['resp_head'] = resp_head
+    info_container['resp_body_bytes'] = resp_body_bytes
+    info_container['resp'] = resp
+    info_container['from_url'] = url
+    return(info_container)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #-----------dont put this func in walkon, coz recursive
 def auto_redireced(info_container,records_container):
