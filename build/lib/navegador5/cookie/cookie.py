@@ -444,7 +444,18 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
         return(1)
     else:
         return(0)
- 
+
+
+def split_cookies_via_secure(cookie_dict_arr):
+    https_cks = []
+    http_cks = []
+    for cookie in cookie_dict_arr:
+        cond = http_cookie_only_for_https(cookie)
+        if(cond):
+            https_cks.append(cookie)
+        else:
+            http_cks.append(cookie)
+    return({'http':http_cks,'https':https_cks}) 
  
  
 
@@ -490,6 +501,23 @@ def is_cookie_valid_for_send(set_cookie_tuple,from_url,to_url):
         return(1)
     else:
         return(0)
+
+def get_cookies_from_resp_head(resp_head,type='Set-Cookie'):
+    return(head.select_headers_via_key_from_tuple_list(resp_head,type))
+
+
+def cookies_tuple_list_to_cookies_dict_list(arr_cookies):
+    cks_dl =[]
+    for i in range(0,arr_cookies_len):
+        full_cookie_dict = decode_resp_set_cookie(arr_cookies[i])
+        cookie_str = full_cookie_dict['cookie']
+        cookie_dict = head.decode_one_http_head('Cookie',';',cookie_str,ordered=0)
+        del cookie_dict[' ']
+        cks_dl.append(cookie_dict)
+    return(cks_dl)
+
+
+
 
 def select_valid_cookies_from_resp(req_head,resp_head,from_url,to_url,return_dict=1):
     if(type(resp_head)==type([])):
