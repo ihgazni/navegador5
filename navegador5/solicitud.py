@@ -528,15 +528,17 @@ def walkon(info_container,**kwargs):
 
 
 #-----------dont put this func in walkon, coz recursive
-def auto_redireced(info_container,records_container):
+def auto_redireced(info_container,records_container,max_redirects=10):
     #------------------auto redirect-----------------------
-    while(1):
+    count = 0
+    while(count<max_redirects):
         redirect_url = head.get_abs_redirect_url_from_resp(info_container['resp'],info_container['url'])
         if(redirect_url):
             info_container['url'] = redirect_url
             info_container = walkon(info_container,records_container=records_container)
         else:
             break
+        count = count + 1
     info_container['auto_redirected'] = 1
     return(info_container)
     
