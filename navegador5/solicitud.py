@@ -320,18 +320,28 @@ def walkon(info_container,**kwargs):
         auto_update_cookie = kwargs['auto_update_cookie']
     else:
         auto_update_cookie = 1
-    print("--auto_update_cookie--")
-    print(auto_update_cookie)
     if(auto_update_cookie):
         from_url = url
         if('to_url' in kwargs):
             to_url = kwargs['to_url']
         else:
             to_url = from_url
+        ##
+        print("---------")
+        print(req_head)
+        print("---------")
+        print(resp_head)
+        print("---------")
+        print(from_url)
+        print("---------")
+        print(to_url)
+        print("---------")
+        ##
         next_req_cookie_dict = cookie.select_valid_cookies_from_resp(req_head,resp_head,from_url,to_url)
         next_req_cookie_str = cookie.cookie_dict_to_str(next_req_cookie_dict,with_head=0)
         ####
-        print("-----next_req_cookie_str----")
+        print(next_req_cookie_dict)
+        print("---------")
         print(next_req_cookie_str)
         ####
         if(next_req_cookie_str ==""):
