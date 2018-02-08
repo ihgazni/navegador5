@@ -375,6 +375,9 @@ def obseleted_walkon(info_container,**kwargs):
 
 def walkon(info_container,**kwargs):
     '''by default auto_update_cookie enabled'''
+    print(info_container['req_head']['Cookie'])
+    print("--------------------------------------")
+
     step = info_container['step']
     from_url = info_container['from_url']
     url = info_container['url']
@@ -412,7 +415,8 @@ def walkon(info_container,**kwargs):
     else:
         info_container['auto_update_cookie'] = 0
     #--------------------------------加入cookie处理-------
-
+    print(info_container['req_head']['Cookie'])
+    #
     #body is string or bytes
     req_body = info_container['req_body']
     if(info_container['method'] == 'GET'):
