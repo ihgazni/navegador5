@@ -10,11 +10,12 @@ import http.cookies
 
 
 def add_cookie_str_to_cookie_str(orig,new):
-    return(orig+'; '+new)
+            
+    return((orig+'; '+new).lstrip(';').strip(' '))
 
 def add_cookie_dict_to_cookie_str(orig,ckd):
     new = cookie_dict_to_str(ckd,with_head=0)
-    return(orig+'; '+new)    
+    return((orig+'; '+new).lstrip(';').strip(' '))
 
 def add_cookie_to_req_head(req_head,ck):
     if(type(ck) == type("")):
