@@ -285,6 +285,83 @@ def urldecode(encoded_str,**kwargs):
             r1[k] = v
     return(r1)
 
+
+def urldecode_half_ordered(encoded_str,**kwargs):
+    if('quote_plus' in kwargs):
+        quote_plus=kwargs['quote_plus']
+    else:
+        quote_plus=True
+    if('sp' in kwargs):
+        sp=kwargs['sp']
+    else:
+        sp="&"
+    eles = encoded_str.split(sp)
+    eles_len = eles.__len__()
+    r1 = []
+    for i in range(0,eles_len):
+        kv = eles[i]
+        if("=" in kv):
+            kv_arr = kv.split("=")
+            k=kv_arr[0]
+            v=kv_arr[1]
+            if(quote_plus):
+                k=urllib.parse.unquote_plus(k)
+                v=urllib.parse.unquote_plus(v)
+            else:
+                k=urllib.parse.unquote(k)
+                v=urllib.parse.unquote(v)
+            r1.append({k:v})
+        else:
+            k = kv
+            v = ""
+            if(quote_plus):
+                k=urllib.parse.unquote_plus(k)
+            else:
+                k=urllib.parse.unquote(k)
+            r1.append({k:v})
+    return(r1)
+
+
+
+
+def urldecode_ordered(encoded_str,**kwargs):
+    if('quote_plus' in kwargs):
+        quote_plus=kwargs['quote_plus']
+    else:
+        quote_plus=True
+    if('sp' in kwargs):
+        sp=kwargs['sp']
+    else:
+        sp="&"
+    eles = encoded_str.split(sp)
+    eles_len = eles.__len__()
+    r1 = []
+    for i in range(0,eles_len):
+        kv = eles[i]
+        if("=" in kv):
+            kv_arr = kv.split("=")
+            k=kv_arr[0]
+            v=kv_arr[1]
+            if(quote_plus):
+                k=urllib.parse.unquote_plus(k)
+                v=urllib.parse.unquote_plus(v)
+            else:
+                k=urllib.parse.unquote(k)
+                v=urllib.parse.unquote(v)
+            r1.append((k,v))
+        else:
+            k = kv
+            v = ""
+            if(quote_plus):
+                k=urllib.parse.unquote_plus(k)
+            else:
+                k=urllib.parse.unquote(k)
+            r1.append((k,v))
+    return(r1)
+
+
+
+
 def urlencode(decoded_dict,**kwargs):
     if('quote_plus' in kwargs):
         quote_plus=kwargs['quote_plus']
@@ -312,4 +389,65 @@ def urlencode(decoded_dict,**kwargs):
     else:
         rslt_str = rslt_str.replace("+","%20")
     return(rslt_str)
-    
+ 
+
+
+def urlencode_half_ordered(decoded_dict_list,**kwargs):
+    if('quote_plus' in kwargs):
+        quote_plus=kwargs['quote_plus']
+    else:
+        quote_plus=True
+    if('sp' in kwargs):
+        sp=kwargs['sp']
+    else:
+        sp="&"
+    eles = decoded_dict_list
+    eles_len = eles.__len__()
+    rslt_str = ""
+    for i in range(0,eles.__len__()):
+        r1_dict = eles[i]
+        k = list(r1_dict.keys())[0]
+        v = list(r1_dict.values())[0]
+        if(v == {}):
+            rslt_str = ''.join((rslt_str,sp,k))
+        else:
+            tmp = urllib.parse.urlencode(r1_dict)
+            rslt_str = rslt_str+sp+tmp
+    rslt_str = rslt_str.lstrip(sp)
+    rslt_str = rslt_str.replace("&",sp)
+    if(quote_plus):
+        pass
+    else:
+        rslt_str = rslt_str.replace("+","%20")
+    return(rslt_str)
+
+
+def urlencode_ordered(decoded_tuple_list,**kwargs):
+    if('quote_plus' in kwargs):
+        quote_plus=kwargs['quote_plus']
+    else:
+        quote_plus=True
+    if('sp' in kwargs):
+        sp=kwargs['sp']
+    else:
+        sp="&"
+    eles = decoded_tuple_list
+    eles_len = eles.__len__()
+    rslt_str = ""
+    for i in range(0,eles.__len__()):
+        kv = eles[i]
+        k = kv[0]
+        v = kv[1]
+        if(v == {}):
+            rslt_str = ''.join((rslt_str,sp,k))
+        else:
+            tmp = urllib.parse.urlencode({k:v})
+            rslt_str = rslt_str+sp+tmp
+    rslt_str = rslt_str.lstrip(sp)
+    rslt_str = rslt_str.replace("&",sp)
+    if(quote_plus):
+        pass
+    else:
+        rslt_str = rslt_str.replace("+","%20")
+    return(rslt_str)
+
