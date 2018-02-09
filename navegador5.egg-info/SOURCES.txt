@@ -8,6 +8,7 @@ navegador5/jq.py
 navegador5/js_random.py
 navegador5/shell_cmd.py
 navegador5/solicitud.py
+navegador5/time_utils.py
 navegador5/url_tool.py
 navegador5.egg-info/PKG-INFO
 navegador5.egg-info/SOURCES.txt
