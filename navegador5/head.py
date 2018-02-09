@@ -1,6 +1,7 @@
 import operator
 import re
 from navegador5 import url_tool
+from navegador5 import time_utils
 
 #query post body
 post_querydict_to_querystr = url_tool.urlencode
@@ -441,6 +442,16 @@ def creat_B2I_url(Cheaders,Rerirecto_Url):
         url = regex_B2I.sub('index',Rerirecto_Url,0)
     return(url)
     
+
+def get_date_from_resp(resp):
+    resp_head_dict = get_resp_headers_vl_dict_from_resp(resp)
+    if('Date' in resp_head_dict):
+        date = resp_head_dict['Date']
+        time_format = 
+        return({'orig':date,'format':time_format})
+    else:
+        return(None)
+
 
 
 def get_content_type_from_resp(resp):

@@ -10,7 +10,6 @@ import http.cookies
 
 
 def add_cookie_str_to_cookie_str(orig,new):
-            
     return((orig+'; '+new).lstrip(';').strip(' '))
 
 def add_cookie_dict_to_cookie_str(orig,ckd):
@@ -18,6 +17,10 @@ def add_cookie_dict_to_cookie_str(orig,ckd):
     return((orig+'; '+new).lstrip(';').strip(' '))
 
 def add_cookie_to_req_head(req_head,ck):
+    if('Cookie' in req_head):
+        pass
+    else:
+        req_head['Cookie'] = ""
     if(type(ck) == type("")):
         req_head['Cookie'] = add_cookie_str_to_cookie_str(req_head['Cookie'],ck)
     else:

@@ -10,6 +10,18 @@ from navegador5 import head
 from navegador5 import body
 from navegador5.cookie import cookie
 
+def check_body(info_container,**kwargs):
+    if('codec' in kwargs):
+        codec = kwargs['codec']
+    else:        
+        codec = get_content_type_from_resp(info_container['resp'])['charset'].lower()
+        if(codec):
+            pass
+        else:
+            codec = 'utf-8'
+    print(info_container['resp_body_bytes'].decode(codec))
+
+
 def new_info_container():
     info_template = {
         'resp':None,
