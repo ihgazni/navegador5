@@ -447,7 +447,7 @@ def get_date_from_resp(resp):
     resp_head_dict = get_resp_headers_vl_dict_from_resp(resp)
     if('Date' in resp_head_dict):
         date = resp_head_dict['Date']
-        time_format = 
+        time_format = time_utils.detect_time_format(date)  
         return({'orig':date,'format':time_format})
     else:
         return(None)
