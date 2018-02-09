@@ -3,6 +3,16 @@ import re
 from navegador5 import url_tool
 from navegador5 import time_utils
 
+#
+HEAD_POOL = [
+    '''User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2\r\nAccept-Encoding: gzip, deflate, br''',
+    '''Accept: text/html, application/xhtml+xml, */*\r\nAccept-Language: zh-Hans-CN,zh-Hans;q=0.8,es-ES;q=0.7,es;q=0.5,en-IE;q=0.3,en;q=0.2\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393\r\nAccept-Encoding: gzip, deflate''',
+    '''Accept: text/html, application/xhtml+xml, */*;q=0.5\r\nAccept-Language: zh-Hans-CN,zh-Hans;q=0.8,es-ES;q=0.7,es;q=0.5,en-IE;q=0.3,en;q=0.2\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko\r\nAccept-Encoding: gzip, deflate'''
+]
+
+
+
+
 #query post body
 post_querydict_to_querystr = url_tool.urlencode
 post_querystr_to_querydict = url_tool.urldecode
