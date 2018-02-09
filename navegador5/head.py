@@ -459,7 +459,7 @@ def get_content_type_from_resp(resp):
     #ct = resp.getheader('Content-Type')
     if('Content-Type' in resp_head_dict):
     #if(ct):
-        charset = ['utf-8']
+        charset = 'utf-8'
         ct = resp_head_dict['Content-Type']
         for i in range(0,ct.__len__()):
             temp = ct[i].split('; ')
