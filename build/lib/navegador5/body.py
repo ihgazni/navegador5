@@ -294,18 +294,4 @@ def encode_data_bytes_to_transfer_encoding_chunked(data_bytes,slice_sec_list,tra
     pass
 
 #-----------------------
-def decode_resp_body_bytes(info_container):
-    tmp = head.get_content_type_from_resp(info_container['resp'])
-    charset = tmp['charset']
-    data_type = tmp['data_type']
-    html_text = info_container['resp_body_bytes'].decode(charset)
-    if('application/json' == data_type.lower):
-        js = json.loads(html_text)
-        return(js)
-    elif('application/x-www-form-urlencoded' == data_type):
-        req_body = url_tool.urldecode(html_text)
-        return(req_body)
-    else:
-        return(html_text)
-
 

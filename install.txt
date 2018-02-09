@@ -1,1 +1,1 @@
-/usr/local/lib/python3.4/site-packages/navegador5-0.24-py3.4.egg
+/usr/local/lib/python3.4/site-packages/navegador5-0.25-py3.4.egg
