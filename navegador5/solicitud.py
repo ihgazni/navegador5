@@ -48,7 +48,6 @@ def new_records_container():
     return(records_template)
 
 
-]
 
 
 
