@@ -27,6 +27,81 @@ def add_cookie_to_req_head(req_head,ck):
         req_head['Cookie'] = add_cookie_dict_to_cookie_str(req_head['Cookie'],ck)
     return(req_head)
 
+
+
+def delete_cookie_via_name_from_cookie_str(ck_str,name,howmany=2**32):
+    ntl = []
+    cktl = cookie_str_to_tuple_list(ck_str)
+    count = 0
+    for i in  range(0,cktl.__len__()):
+        if(name == cktl[i][0]):
+            if(count<howmany):
+                count = count + 1
+            else:
+                break
+        else:
+            ntl.append(cktl[i])
+    for j in range(i+1,cktl.__len__()):
+        ntl.append(cktl[j])
+    return(cookie_tuple_list_to_str(ntl,withhead=0))
+
+
+def delete_cookie_via_value_from_cookie_str(ck_str,value,howmany=2**32):
+    ntl = []
+    cktl = cookie_str_to_tuple_list(ck_str)
+    count = 0
+    for i in  range(0,cktl.__len__()):
+        if(value == cktl[i][1]):
+            if(count<howmany):
+                count = count + 1
+            else:
+                break
+        else:
+            ntl.append(cktl[i])
+    for j in range(i+1,cktl.__len__()):
+        ntl.append(cktl[j])
+    return(cookie_tuple_list_to_str(ntl,withhead=0))
+
+
+
+def delete_cookie_via_nameandvalue_from_cookie_str(ck_str,name,value,howmany=2**32):
+    ntl = []
+    cktl = cookie_str_to_tuple_list(ck_str)
+    count = 0
+    for i in  range(0,cktl.__len__()):
+        if((value == cktl[i][1])&(name == cktl[i][0])):
+            if(count<howmany):
+                count = count + 1
+            else:
+                break
+        else:
+            ntl.append(cktl[i])
+    for j in range(i+1,cktl.__len__()):
+        ntl.append(cktl[j])
+    return(cookie_tuple_list_to_str(ntl,withhead=0))
+
+
+
+def delete_cookie_via_nameorvalue_from_cookie_str(ck_str,name,value,howmany=2**32):
+    ntl = []
+    cktl = cookie_str_to_tuple_list(ck_str)
+    count = 0
+    for i in  range(0,cktl.__len__()):
+        if((value == cktl[i][1])|(name == cktl[i][0])):
+            if(count<howmany):
+                count = count + 1
+            else:
+                break
+        else:
+            ntl.append(cktl[i])
+    for j in range(i+1,cktl.__len__()):
+        ntl.append(cktl[j])
+    return(cookie_tuple_list_to_str(ntl,withhead=0))
+
+
+
+
+
 def in_ignoreUpper(lora,key):
     for each in lora:
         if(key.lower() == each.lower()):
@@ -62,6 +137,34 @@ def cookie_dict_to_str(cookie_dict,with_head=1):
         cookie_str =''
     for key in cookie_dict:
         cookie_str = ''.join((cookie_str,key,'=',cookie_dict[key],'; '))
+    cookie_str = cookie_str.rstrip(' ')
+    cookie_str = cookie_str.rstrip(';')
+    return(cookie_str)
+
+
+
+def cookie_str_to_tuple_list(cookie_str):
+    cookie_tuple_list = []
+    eles = cookie_str.split("; ")
+    eles_len = eles.__len__()
+    regex = re.compile("(.*?)=(.*)")
+    for i in range(0,eles_len):
+        m = regex.search(eles[i])
+        if(m):
+            k=m.group(1)
+            v=m.group(2)
+            cookie_tuple_list.append((k,v))
+    return(cookie_tuple_list)
+
+
+def cookie_tuple_list_to_str(cookie_tuple_list,with_head=1):
+    if(with_head):
+        cookie_str ='Cookie: '
+    else:
+        cookie_str =''
+    for i in range(0,cookie_tuple_list.__len__()):
+        kv = cookie_tuple_list[i]
+        cookie_str = ''.join((cookie_str,kv[0],'=',kv[1],'; '))
     cookie_str = cookie_str.rstrip(' ')
     cookie_str = cookie_str.rstrip(';')
     return(cookie_str)

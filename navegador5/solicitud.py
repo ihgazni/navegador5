@@ -10,6 +10,58 @@ from navegador5 import head
 from navegador5 import body
 from navegador5.cookie import cookie
 
+import socket
+
+#############
+def shutdown(info_container,how=socket.SHUT_WR):
+    '''close()releases the resource associated with a connection but does not 
+       necessarily close the connection immediately. 
+       If you want to close the connection in a timely fashion, callshutdown() beforeclose().
+       socket.SHUT_RD 0 
+       socket.SHUT_WR 1
+       socket.SHUT_RDWR 2
+    '''
+    info_container['conn'].sock.shutdown(how)
+    info_container['conn'].sock.close()
+    info_container['shutdown'] = 1
+    return(info_container)
+
+
+def is_shutted(info_container):
+    try:
+        info_container['conn'].sock.send(b"\x00")
+    except:
+        return(0)
+    else:
+        return(1)
+
+
+def links_pool(num,base_url):
+    pool = {'links':[],'domain':base_url}
+    for i in range(0,num):
+        link = keepalive_init(base_url)
+        pool['links'].append(link)
+    return(pool)
+
+def select_from_link_pool(pool):
+    for seq in range(0,pool['links'].__len__()):
+        info_container,records_container = each
+        if(info_container['inuse']==0):
+            info_container['inuse']=1
+            return((info_container,records_container,seq))
+        else:
+            pass
+    return(None)
+
+def return_to_link_pool(pool,seq):
+    '''you can do shutdown before return to make sure not exceed th max links'''
+    base_url = pool['domain']
+    pool['links'][seq] = keepalive_init(base_url)
+    return(pool)
+
+##############
+
+
 def check_body(info_container,**kwargs):
     if('codec' in kwargs):
         codec = kwargs['codec']
@@ -35,7 +87,9 @@ def new_info_container():
         'step': 0, 
         'conn': None,
         'auto_update_cookie':0,
-        'auto_redirected':0
+        'auto_redirected':0,
+        'shutdown':0,
+        'inuse':0
     }
     return(info_template)
 
@@ -48,17 +102,31 @@ def new_records_container():
     return(records_template)
 
 
+def keepalive_init(base_url,**kwargs):
+    info_container = nvsoli.new_info_container()
+    info_container['base_url'] = base_url
+    info_container['method'] = 'GET'
+    if('UAnum' in kwargs):
+        req_head_str = head.HEAD_POOL[kwargs['UAnum']]
+    else:
+        req_head_str = '''User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2\r\nAccept-Encoding: gzip, deflate, br'''
+    info_container['req_head'] = nvhead.build_headers_dict_from_str(req_head_str,'\r\n')
+    info_container['req_head']['Connection'] = 'keep-alive'
+    #### init records_container
+    records_container = nvsoli.new_records_container()
+    return((info_container,records_container))
 
 
 
-def init(base_url,**kwargs):
+
+def nonkeepalive_init(base_url,**kwargs):
     info_container = new_info_container()
     info_container['base_url'] = base_url
     info_container['method'] = 'GET'
     if('UAnum' in kwargs):
         req_head_str = head.HEAD_POOL[kwargs['UAnum']]
     else:
-        req_head_str = '''User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2\r\nAccept-Encoding: gzip, deflate, br'''
+        req_head_str = '''User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2\r\nAccept-Encoding: gzip, deflate, br'''
     info_container['req_head'] = head.build_headers_dict_from_str(req_head_str,'\r\n')
     info_container['req_head']['Connection'] = 'close'
     #### init records_container
@@ -412,7 +480,7 @@ def walkon(info_container,**kwargs):
     #else:
     #    pass
     #print("--------------------------------------")
-
+    info_container['inuse'] = 1
     step = info_container['step']
     from_url = info_container['from_url']
     url = info_container['url']
