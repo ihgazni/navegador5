@@ -296,7 +296,7 @@ def stepping_resp(conn,explicit_keepalive=0):
     #secarino_1 = head.name_value_exist_in_headers(resp_head,'Connection','Keep-Alive')
     #secarino_2 = head.name_value_exist_in_headers(resp_head,'Connection','keep-alive')
     #
-    tmp = nvhead.select_headers_via_key_from_tuple_list(info_container['resp_head'],'connection')
+    tmp = head.select_headers_via_key_from_tuple_list(info_container['resp_head'],'connection')
     if(tmp.__len__()==0):
         pass
     else:
