@@ -300,7 +300,7 @@ def stepping_resp(conn,explicit_keepalive=0):
     if(tmp.__len__()==0):
         pass
     else:
-        v = tmp[1].lower()
+        v = tmp[0][1].lower()
         if(v == "keep-alive"):
             print("ex keepalive")
             pass
