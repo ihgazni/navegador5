@@ -146,7 +146,7 @@ def connection(url_scheme,url_Netloc,**kwargs):
     if('timeout' in kwargs):
         timeout = kwargs['timeout']
     else:
-        timeout = 30
+        timeout = 60
     if(url_scheme == 'http'):
         if(port==None):
             port = 80 
@@ -293,27 +293,22 @@ def stepping_resp(conn,explicit_keepalive=0):
     else:
         pass
     #
-    secarino_1 = head.name_value_exist_in_headers(resp_head,'Connection','Keep-Alive')
-    secarino_2 = head.name_value_exist_in_headers(resp_head,'Connection','keep-alive')
+    #secarino_1 = head.name_value_exist_in_headers(resp_head,'Connection','Keep-Alive')
+    #secarino_2 = head.name_value_exist_in_headers(resp_head,'Connection','keep-alive')
     #
-    if((secarino_1 == 0)&(secarino_2 == 0)):
-        # no Connection exist
-        rkeepalive = 0
-    elif((secarino_1 == 1)|(secarino_2 == 1)):
-        # Connection = Keep-Alive
-        rkeepalive = 1
-    else:
-        # Connection = close
-        rkeepalive = -1
-    if(rkeepalive==0):
-        if(explicit_keepalive==0):
-            pass
-        else:
-            conn.close()
-    elif(rkeepalive==-1):
-        conn.close()
-    else:
+    tmp = nvhead.select_headers_via_key_from_tuple_list(info_container['resp_head'],'connection')
+    if(tmp.__len__()==0):
         pass
+    else:
+        v = tmp[1].lower()
+        if(v == "keep-alive"):
+            print("ex keepalive")
+            pass
+        elif(v == "close"):
+            conn.close()
+        else:
+            print("im keepalive")
+            pass
     return((conn,resp_head,resp_body_bytes,resp))
 
 
