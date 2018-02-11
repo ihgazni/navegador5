@@ -112,6 +112,8 @@ def keepalive_init(base_url,**kwargs):
         req_head_str = '''User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2\r\nAccept-Encoding: gzip, deflate, br'''
     info_container['req_head'] = nvhead.build_headers_dict_from_str(req_head_str,'\r\n')
     info_container['req_head']['Connection'] = 'keep-alive'
+    for key in kwargs:
+        info_container['req_head'][key] = kwargs[key]
     #### init records_container
     records_container = nvsoli.new_records_container()
     return((info_container,records_container))
@@ -129,6 +131,8 @@ def nonkeepalive_init(base_url,**kwargs):
         req_head_str = '''User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2\r\nAccept-Encoding: gzip, deflate, br'''
     info_container['req_head'] = head.build_headers_dict_from_str(req_head_str,'\r\n')
     info_container['req_head']['Connection'] = 'close'
+    for key in kwargs:
+        info_container['req_head'][key] = kwargs[key]
     #### init records_container
     records_container = nvsoli.new_records_container()
     return((info_container,records_container))
@@ -467,6 +471,7 @@ def obseleted_walkon(info_container,**kwargs):
         info_container['auto_update_cookie'] = 0
     #--------------------------------加入cookie处理-------
     return(info_container)
+
 
 
 
