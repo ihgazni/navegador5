@@ -9,6 +9,40 @@ import http.cookiejar
 import http.cookies
 
 
+def get_cookie_for_next_req(info_container,next_url):
+    req_head = info_container['req_head']
+    resp_head = info_container['resp_head']
+    from_url = info_container['url']
+    to_url = next_url
+    req_head = info_container['req_head']
+    resp_head = info_container['resp_head']
+    next_req_cookie_dict = select_valid_cookies_from_resp(req_head,resp_head,from_url,to_url)
+    next_req_cookie_str = cookie_dict_to_str(next_req_cookie_dict,with_head=0)
+    return(next_req_cookie_str)
+
+
+def update_cookie_for_next_req(info_container,next_req_cookie_str):
+    if(next_req_cookie_str ==""):
+        pass
+    else:
+        if(type(req_head) == type({})):
+            req_head['Cookie'] = next_req_cookie_str
+        elif(type(req_head) == type('')):
+            req_head_dict = head.build_headers_dict_from_str(req_head)
+            req_head_dict['Cookie'] = next_req_cookie_str
+            req_head = head.build_headers_str_from_dict(req_head_dict)
+        else:
+            pass
+    info_container['req_head'] = req_head
+
+
+
+
+
+
+
+
+
 def add_cookie_str_to_cookie_str(orig,new):
     return((orig+'; '+new).lstrip(';').strip(' '))
 
