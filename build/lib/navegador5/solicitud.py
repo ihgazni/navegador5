@@ -103,7 +103,7 @@ def new_records_container():
 
 
 def keepalive_init(base_url,**kwargs):
-    info_container = nvsoli.new_info_container()
+    info_container = new_info_container()
     info_container['base_url'] = base_url
     info_container['method'] = 'GET'
     if('UAnum' in kwargs):
@@ -115,7 +115,7 @@ def keepalive_init(base_url,**kwargs):
     for key in kwargs:
         info_container['req_head'][key] = kwargs[key]
     #### init records_container
-    records_container = nvsoli.new_records_container()
+    records_container = new_records_container()
     return((info_container,records_container))
 
 
@@ -134,7 +134,7 @@ def nonkeepalive_init(base_url,**kwargs):
     for key in kwargs:
         info_container['req_head'][key] = kwargs[key]
     #### init records_container
-    records_container = nvsoli.new_records_container()
+    records_container = new_records_container()
     return((info_container,records_container))
 
 
