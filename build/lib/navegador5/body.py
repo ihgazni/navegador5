@@ -10,6 +10,7 @@ import brotli
 import json
 from lxml import etree
 import lxml.html
+import base64
 
 ##
 def etree_is_leaf_node(node):
@@ -308,4 +309,54 @@ def decode_resp_body_bytes(info_container):
     else:
         return(html_text)
 
-
+#
+def decode_src(src):
+    arr = src.split(',')
+    data_scheme = arr[0]
+    data = arr[1]
+    supported_scheme = [
+        'data:'
+        'data:text/plain',
+        'data:text/html',
+        'data:text/html;base64',
+        'data:text/css',
+        'data:text/css;base64',
+        'data:text/JavaScript',
+        'data:text/javascript;base64',
+        'data:image/gif;base64',
+        'data:image/png;base64',
+        'data:image/jpeg;base64',
+        'data:image/x-icon;base64'
+    ]
+    index = supported_scheme.__len__()
+    for i in range(0,supported_scheme.__len__()):
+        if(data_scheme.lower() == supported_scheme[i].lower()):
+            index = i
+        else:
+            pass
+    if(index == supported_scheme.__len__()):
+        return(src)
+    else:
+        pass
+    data_scheme = supported_scheme[index]
+    tmp = data_scheme.split(':')
+    head = tmp[0]
+    tail = tmp[1]
+    rslt = {'type':'','suffix':'','codec':''}
+    if(tail==''):
+        rslt['type'] = 'text'
+        rslt['suffix'] = 'plain'
+    else:
+        tmp = tail.split(';')
+        if(tmp.__len__()==1):
+            pass
+        else:
+            rslt['codec'] = tmp[1]
+        tmp = tmp[0].split('/')
+        rslt['type'] = tmp[0]
+        rslt['suffix'] = tmp[1]
+        if(rslt['codec'] == 'base64'):
+            rslt['data'] = base64.b64decode(data)
+        else:
+            rslt['data'] = data
+    return(rslt)

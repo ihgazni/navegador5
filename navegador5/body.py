@@ -306,6 +306,8 @@ def decode_resp_body_bytes(info_container):
     elif('application/x-www-form-urlencoded' == data_type):
         req_body = url_tool.urldecode(html_text)
         return(req_body)
+    elif('text/css' == data_type):
+        return(html_text)
     else:
         return(html_text)
 
