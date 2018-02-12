@@ -322,6 +322,7 @@ def linux_record_state_change_via_ipport(src_ip,src_port,dst_ip,dst_port,check_i
                 pass
         else:
             meeted = 1
+            print("meeted:{0}".format(meeted))
         time.sleep(check_interval)
     return(records)
 
