@@ -653,20 +653,24 @@ def walkon(info_container,**kwargs):
     # root@ubuntu:~# netstat | egrep "(https|http)"
     # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
     if('linux' in platform.system().lower()):
-        state = linux_check_tcp_state_via_conn(info_container['conn'])
-        if(state.upper() ==  'ESTABLISHED'):
-            pass
-        elif(state.upper() ==  'CLOSE_WAIT'):
-            shutdown(info_container)
-            info_container['conn'] = None
-            info_container['shutdown'] = 0
-            info_container['reopened'] = 1
-            info_container['reopen_reason']= 'CLOSE_WAIT'
+        if(info_container['conn']):
+            state = linux_check_tcp_state_via_conn(info_container['conn'])
+            if(state.upper() ==  'ESTABLISHED'):
+                pass
+            elif(state.upper() ==  'CLOSE_WAIT'):
+                shutdown(info_container)
+                info_container['conn'] = None
+                info_container['shutdown'] = 0
+                info_container['reopened'] = 1
+                info_container['reopen_reason']= 'CLOSE_WAIT'
+            else:
+                #for other TCP state need to add some code
+                pass
         else:
-            #for other TCP state need to add some code
+            #for windows need add some code
             pass
     else:
-        #for windows need add some code
+        #this is the init request
         pass
     #---------------for CLOSE_WAIT  bug--------------
     #####################################
