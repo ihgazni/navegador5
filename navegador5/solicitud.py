@@ -598,9 +598,11 @@ def check_and_reopen_ifneeded(info_container):
     if('linux' in platform.system().lower()):
         if(info_container['conn']):
             state = linux_check_tcp_state_via_conn(info_container['conn'])
+            print(state)
             if(state.upper() ==  'ESTABLISHED'):
                 pass
             elif(state.upper() ==  'CLOSE_WAIT'):
+                print("---closing----")
                 shutdown(info_container)
                 info_container['conn'] = None
                 info_container['shutdown'] = 0
