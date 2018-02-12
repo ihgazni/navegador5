@@ -3,12 +3,14 @@
 import http.client
 import urllib.parse
 import time
+import date
 import operator
 from navegador5 import url_tool
 from navegador5 import shell_cmd
 from navegador5 import head
 from navegador5 import body
 from navegador5.cookie import cookie
+from navegador5 import time_utils
 
 import socket
 
@@ -233,7 +235,37 @@ def linux_check_tcp_state(conn):
     state = shell_cmd.pipe_shell_cmds(shell_CMDs)[0].decode().strip('\n').strip(' ')
     return(state)
 
-def linux_manual_close_conn(conn,keepalive_timeout):
+def linux_record_state_change(conn,check_interval=1):
+    records = [("",0)]
+    prev_rslt = ""
+    prev_t = time.time()
+    init_t = prev_t
+    while(1):
+        try:
+            rslt = linux_check_tcp_state(conn)
+            if(rslt == prev_rslt):
+                pass
+            else:
+                t = time.time()
+                diff_t = t - prev_t
+                records.append((rslt,diff_t))
+                prev_rslt = rslt
+                prev_t = t
+        except:
+            rslt = ""
+            t =time.time()
+            diff_t = t - prev_t
+            records.append((rslt,diff_t))
+            total_t = t - init_t
+            print("{0}seconds elapsed finally".format(total_t))
+            break
+        else:
+            pass
+   return(records) 
+    
+
+
+def linux_manual_close_conn(conn,keepalive_timeout=0,how=socket.SHUT_WR):
     time.sleep(keepalive_timeout)
     r_TCP_state = self.linux_check_tcp_state(conn)
     print(r_TCP_state)
@@ -241,7 +273,10 @@ def linux_manual_close_conn(conn,keepalive_timeout):
         pass
     else:
         print('TCP STATE {0} ,IMPLICIT CONN RESP MODE, CLOSE CONN'.format(r_TCP_state))
-        conn.close()
+        conn.sock.shutdown(how)
+        conn.sock.close()
+
+
 
 ####
 class RespError(Exception):
@@ -383,7 +418,7 @@ def obseleted_walkon(info_container,**kwargs):
     if('timeout' in kwargs):
         timeout = kwargs['timeout']
     else:
-        timeout = 30
+        timeout = 60
     if(step == 0):
         conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
     else:

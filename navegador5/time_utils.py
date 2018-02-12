@@ -13,6 +13,16 @@ def in_ignoreUpper(lora,key):
     return((False,None))
     
 
+def s2hms(seconds):
+    arr = seconds.split(".")
+    s1 = arr[0]
+    s2 = arr[1]
+    h = int(s1) // 3600
+    m1 = int(s1) % 3600
+    m = int(m1) // 60
+    s = int(m1) % 60
+    print(str(h)+':'+str(m)+':'+str(s)+'.'+s2)
+    return({'hours':int(h),'minutes':int(m),'seconds':float(str(s)+'.'+s2)})
 
     
 
