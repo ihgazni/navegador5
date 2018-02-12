@@ -224,7 +224,9 @@ def stepping_req(conn,method,url_path,**kwargs):
         pass
     return(conn)
 
-def linux_check_tcp_state(conn):
+
+
+def linux_check_tcp_state_via_conn(conn):
     LA  = ''.join((conn.sock.getsockname()[0],':',str(conn.sock.getsockname()[1])))
     FA = ''.join((conn.sock.getpeername()[0],':',str(conn.sock.getpeername()[1])))
     egrep_RE_string = ''.join((LA,'[ ]+',FA))
@@ -235,7 +237,25 @@ def linux_check_tcp_state(conn):
     state = shell_cmd.pipe_shell_cmds(shell_CMDs)[0].decode().strip('\n').strip(' ')
     return(state)
 
-def linux_record_state_change(conn,check_interval=1,count=500):
+def getipport_from_conn(conn):
+    src_ip =conn.sock.getsockname()[0]
+    src_port = conn.sock.getsockname()[1]
+    dst_ip = conn.sock.getpeername()[0]
+    dst_port = conn.sock.getpeername()[1]
+    return((src_ip,src_port,dst_ip,dst_port))
+
+def linux_check_tcp_state_via_ipport(src_ip,src_port,dst_ip,dst_port):
+    LA  = ''.join((str(src_ip),':',str(src_port)))
+    FA = ''.join((str(dst_ip),':',str(dst_port)))
+    egrep_RE_string = ''.join((LA,'[ ]+',FA))
+    shell_CMDs = {}
+    shell_CMDs[1] = 'netstat -n'
+    shell_CMDs[2] = ''.join(('egrep ','"',egrep_RE_string,'"'))
+    shell_CMDs[3] = "awk {'print $6'}"
+    state = shell_cmd.pipe_shell_cmds(shell_CMDs)[0].decode().strip('\n').strip(' ')
+    return(state)
+
+def linux_record_state_change_via_conn(conn,check_interval=1,count=500):
     records = [("",0)]
     prev_rslt = ""
     prev_t = time.time()
@@ -243,7 +263,7 @@ def linux_record_state_change(conn,check_interval=1,count=500):
     meeted = 0
     while(1):
         try:
-            rslt = linux_check_tcp_state(conn)
+            rslt = linux_check_tcp_state_via_conn(conn)
             if(rslt == prev_rslt):
                 print(rslt)                
             else:
@@ -269,6 +289,42 @@ def linux_record_state_change(conn,check_interval=1,count=500):
         time.sleep(check_interval)
     return(records) 
     
+
+
+def linux_record_state_change_via_ipport(src_ip,src_port,dst_ip,dst_port,check_interval=1,count=500):
+    records = [("",0)]
+    prev_rslt = ""
+    prev_t = time.time()
+    init_t = prev_t
+    meeted = 0
+    while(1):
+        try:
+            rslt = linux_check_tcp_state_via_ipport(src_ip,src_port,dst_ip,dst_port)
+            if(rslt == prev_rslt):
+                print(rslt)
+            else:
+                t = time.time()
+                diff_t = t - prev_t
+                print("from {0} to {1} afte {2} secs".format(prev_rslt,rslt,diff_t))
+                records.append((rslt,diff_t))
+                prev_rslt = rslt
+                prev_t = t
+        except:
+            rslt = ""
+            t =time.time()
+            diff_t = t - prev_t
+            records.append((rslt,diff_t))
+            if(meeted==1):
+                total_t = t - init_t
+                print("{0}seconds elapsed finally".format(total_t))
+                break
+            else:
+                pass
+        else:
+            meeted = 1
+        time.sleep(check_interval)
+    return(records)
+
 
 
 def linux_manual_close_conn(conn,keepalive_timeout=0,how=socket.SHUT_WR):
