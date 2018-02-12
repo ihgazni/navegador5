@@ -763,8 +763,11 @@ def walkon(info_container,**kwargs):
     # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
     # root@ubuntu:~# netstat | egrep "(https|http)"
     # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
-    info_container = check_and_reopen_ifneeded(info_container)
-    conn = info_container['conn']
+    if(step == 0):
+        pass
+    else:
+        info_container = check_and_reopen_ifneeded(info_container)
+        conn = info_container['conn']
     #---------------for CLOSE_WAIT  bug--------------
     #####################################
     req_body = info_container['req_body']
@@ -871,7 +874,10 @@ def walkon(info_container,**kwargs):
     info_container['resp'] = resp
     info_container['from_url'] = url
     ###################
-    info_container = check_and_reopen_ifneeded(info_container)
+    if(step<2):
+        pass
+    else:
+        info_container = check_and_reopen_ifneeded(info_container)
     ###################
     return(info_container)
 
