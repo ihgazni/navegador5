@@ -291,6 +291,8 @@ def linux_record_state_change_via_conn(conn,check_interval=1,count=500):
     
 
 
+
+
 def linux_record_state_change_via_ipport(src_ip,src_port,dst_ip,dst_port,check_interval=1,count=500):
     records = [("",0)]
     prev_rslt = ""
@@ -304,14 +306,14 @@ def linux_record_state_change_via_ipport(src_ip,src_port,dst_ip,dst_port,check_i
         else:
             meeted = 1
         if(rslt == prev_rslt):
-	    print(rslt)
+            print(rslt)
         else:
-	    t = time.time()
+            t = time.time()
             diff_t = t - prev_t
-	    print("from {0} to {1} afte {2} secs".format(prev_rslt,rslt,diff_t))
-	    records.append((rslt,diff_t))
-	    prev_rslt = rslt
-	    prev_t = t
+            print("from {0} to {1} afte {2} secs".format(prev_rslt,rslt,diff_t))
+            records.append((rslt,diff_t))
+            prev_rslt = rslt
+            prev_t = t
         if((meeted==1)&(rslt =="")):
             t =time.time()
             diff_t = t - prev_t
@@ -323,7 +325,6 @@ def linux_record_state_change_via_ipport(src_ip,src_port,dst_ip,dst_port,check_i
             pass
         time.sleep(check_interval)
     return(records)
-
 
 
 def linux_manual_close_conn(conn,keepalive_timeout=0,how=socket.SHUT_WR):
