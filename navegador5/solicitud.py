@@ -248,12 +248,6 @@ def stepping_req(conn,method,url_path,**kwargs):
 #<REMOTE IP_ADD> 192.168.75.128	TCP	54	https > 41597 [RST, ACK] Seq=3517 Ack=1109 Win=64240 Len=0
 
 def linux_check_tcp_state_via_conn(conn):
-    if(conn==None):
-        return("_CONN_NONE")
-    elif(conn.sock == None):
-        return("_SOCK_NONE")
-    else:
-        
     '''#this will error when the remote RST
        #>>> conn.sock
        #<ssl.SSLSocket fd=3, family=AddressFamily.AF_INET, type=2049, proto=6, laddr=('192.168.75.128', 41597)>
@@ -268,6 +262,12 @@ def linux_check_tcp_state_via_conn(conn):
        #this happend when the remote send RST
        #<REMOTE IP_ADD> 192.168.75.128 TCP    54    https > 41597 [RST, ACK] Seq=3517 Ack=1109 Win=64240 Len=0
     '''
+    if(conn==None):
+        return("_CONN_NONE")
+    elif(conn.sock == None):
+        return("_SOCK_NONE")
+    else:
+        pass
     LA = None
     FA = None
     try:
