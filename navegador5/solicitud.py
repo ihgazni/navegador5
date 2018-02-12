@@ -248,6 +248,7 @@ def linux_record_state_change(conn,check_interval=1):
             else:
                 t = time.time()
                 diff_t = t - prev_t
+                print("from {0} to {1} afte {2} secs".format(prev_rslt,rslt,diff_t))
                 records.append((rslt,diff_t))
                 prev_rslt = rslt
                 prev_t = t
