@@ -22,6 +22,11 @@ def shutdown(info_container,how=socket.SHUT_WR):
        socket.SHUT_RD 0 
        socket.SHUT_WR 1
        socket.SHUT_RDWR 2
+       使用shutdown来关闭socket的功能
+       SHUT_RDWR：关闭读写，即不能使用send/write/recv/read等
+       SHUT_RD：关闭读，即不能使用read/recv等
+       SHUT_WR:关闭写功能，即不能使用send/write等
+       除此之外，还将缓冲区中的内容清空
     '''
     info_container['conn'].sock.shutdown(how)
     info_container['conn'].sock.close()
@@ -399,10 +404,10 @@ def stepping_resp(conn,client_close_when_recv_Connection_close=0):
     else:
         v = tmp[0][1].lower()
         if(v == "keep-alive"):
-            print("ex keepalive")
+            print("recv ex keepalive")
             pass
         elif(v == "close"):
-            print("ex close")
+            print("recv ex close")
             if(client_close_when_recv_Connection_close):
                 print("        :client do close")
                 conn.close()
@@ -410,7 +415,7 @@ def stepping_resp(conn,client_close_when_recv_Connection_close=0):
                 print("        :wait for server for ex close")
                 pass
         else:
-            print("im keepalive")
+            print("recv im keepalive")
             pass
     return((conn,resp_head,resp_body_bytes,resp))
 
@@ -695,9 +700,11 @@ def walkon(info_container,**kwargs):
     else:
         if(conn.sock == None):
             ####@@@@@
-            print("step:{0}".format(step))
-            print(conn)
-            #conn.close()
+            #print("step:{0}".format(step))
+            #print(conn)
+            #release resource
+            conn.close()
+            ######
             #@@@@@
             conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
         else:

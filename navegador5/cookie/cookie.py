@@ -563,7 +563,7 @@ def http_cookie_outof_path(cookie_dict,**kwargs):
     to_netloc = to_attribs.netloc
     cond,key = in_ignoreUpper(cookie_dict,'Domain')
     if(cond):
-        domain = cookie_dict[key].replce(' ',"")
+        domain = cookie_dict[key].replace(' ',"")
         if(domain == ''):
             domain = None
         else:
