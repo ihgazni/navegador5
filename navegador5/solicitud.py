@@ -351,7 +351,7 @@ class RespBodyError(Exception):
     pass
 ####
 
-def stepping_resp(conn,explicit_keepalive=0):
+def stepping_resp(conn,client_close_when_recv_Connection_close=0):
     try:
         resp = conn.getresponse()
     except Exception as e:
@@ -402,7 +402,10 @@ def stepping_resp(conn,explicit_keepalive=0):
             print("ex keepalive")
             pass
         elif(v == "close"):
-            conn.close()
+            if(client_close_when_recv_Connection_close):
+                conn.close()
+            else:
+                pass
         else:
             print("im keepalive")
             pass
@@ -436,10 +439,10 @@ def obseleted_walkon(info_container,**kwargs):
         save_scripts = kwargs['save_scripts']
     else:
         save_scripts = 0
-    if('explicit_keepalive' in kwargs):
-        explicit_keepalive = kwargs['explicit_keepalive']
+    if('client_close_when_recv_Connection_close' in kwargs):
+        client_close_when_recv_Connection_close = kwargs['client_close_when_recv_Connection_close']
     else:
-        explicit_keepalive = 0
+        client_close_when_recv_Connection_close = 0
     url_scheme = urllib.parse.urlparse(url).scheme
     url_Netloc = urllib.parse.urlparse(url).netloc
     if('default_port' in kwargs):
@@ -501,7 +504,7 @@ def obseleted_walkon(info_container,**kwargs):
         conn = stepping_req(conn,method,url_path,req_head=req_head,req_body=req_body)
     else:
         conn = stepping_req(conn,method,url_path+'?'+url_Query,req_head=req_head,req_body=req_body)
-    conn,resp_head,resp_body_bytes,resp = stepping_resp(conn,explicit_keepalive=explicit_keepalive)
+    conn,resp_head,resp_body_bytes,resp = stepping_resp(conn,client_close_when_recv_Connection_close=client_close_when_recv_Connection_close)
     resp_body_bytes = body.decompress_resp_body(resp_body_bytes,resp)
     if(save_scripts):
         body.findall_jscript_from_resp_body(resp_body_bytes,'s{0}'.format(step))
@@ -639,10 +642,10 @@ def walkon(info_container,**kwargs):
         save_scripts = kwargs['save_scripts']
     else:
         save_scripts = 0
-    if('explicit_keepalive' in kwargs):
-        explicit_keepalive = kwargs['explicit_keepalive']
+    if('client_close_when_recv_Connection_close' in kwargs):
+        client_close_when_recv_Connection_close = kwargs['client_close_when_recv_Connection_close']
     else:
-        explicit_keepalive = 0
+        client_close_when_recv_Connection_close = 0
     url_scheme = urllib.parse.urlparse(url).scheme
     url_Netloc = urllib.parse.urlparse(url).netloc
     if('default_port' in kwargs):
@@ -704,7 +707,7 @@ def walkon(info_container,**kwargs):
         conn = stepping_req(conn,method,url_path,req_head=req_head,req_body=req_body)
     else:
         conn = stepping_req(conn,method,url_path+'?'+url_Query,req_head=req_head,req_body=req_body)
-    conn,resp_head,resp_body_bytes,resp = stepping_resp(conn,explicit_keepalive=explicit_keepalive)
+    conn,resp_head,resp_body_bytes,resp = stepping_resp(conn,client_close_when_recv_Connection_close=client_close_when_recv_Connection_close)
     resp_body_bytes = body.decompress_resp_body(resp_body_bytes,resp)
     if(save_scripts):
         body.findall_jscript_from_resp_body(resp_body_bytes,'s{0}'.format(step))
