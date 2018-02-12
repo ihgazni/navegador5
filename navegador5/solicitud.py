@@ -579,6 +579,45 @@ def obseleted_walkon(info_container,**kwargs):
 
 
 
+def check_and_reopen_ifneeded(info_container):
+    #---------------for CLOSE_WAIT  bug---------------
+    #---------------when using http1.1 long-persistant keep-alive feature------------
+    #---------------if the server send FIN,PSH,ACK, and the client response ACK
+    #---------------client will stuck in CLOSE_WAIT state, even if NO anything in recv buffer
+    #121.29.8.170       192.168.75.128  TCP     54      http > 33815 [FIN, PSH, ACK] Seq=15816 Ack=364 Win=64240 Len=0
+    #192.168.75.128     121.29.8.170    TCP     60      33815 > http [ACK] Seq=364 Ack=15817 Win=59860 Len=0
+
+    # root@ubuntu:~# netstat | egrep "(https|http)"
+    # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
+    # root@ubuntu:~# netstat | egrep "(https|http)"
+    # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
+    # root@ubuntu:~# netstat | egrep "(https|http)"
+    # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
+    # root@ubuntu:~# netstat | egrep "(https|http)"
+    # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
+    if('linux' in platform.system().lower()):
+        if(info_container['conn']):
+            state = linux_check_tcp_state_via_conn(info_container['conn'])
+            if(state.upper() ==  'ESTABLISHED'):
+                pass
+            elif(state.upper() ==  'CLOSE_WAIT'):
+                shutdown(info_container)
+                info_container['conn'] = None
+                info_container['shutdown'] = 0
+                info_container['reopened'] = 1
+                info_container['reopen_reason']= 'CLOSE_WAIT'
+            else:
+                #for other TCP state need to add some code
+                pass
+        else:
+            #for windows need add some code
+            pass
+    else:
+        #this is the init request
+        pass
+    return(info_container)
+
+
 
 
 def walkon(info_container,**kwargs):
@@ -652,26 +691,7 @@ def walkon(info_container,**kwargs):
     # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
     # root@ubuntu:~# netstat | egrep "(https|http)"
     # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
-    if('linux' in platform.system().lower()):
-        if(info_container['conn']):
-            state = linux_check_tcp_state_via_conn(info_container['conn'])
-            if(state.upper() ==  'ESTABLISHED'):
-                pass
-            elif(state.upper() ==  'CLOSE_WAIT'):
-                shutdown(info_container)
-                info_container['conn'] = None
-                info_container['shutdown'] = 0
-                info_container['reopened'] = 1
-                info_container['reopen_reason']= 'CLOSE_WAIT'
-            else:
-                #for other TCP state need to add some code
-                pass
-        else:
-            #for windows need add some code
-            pass
-    else:
-        #this is the init request
-        pass
+    info_container = check_and_reopen_ifneeded(info_container)
     #---------------for CLOSE_WAIT  bug--------------
     #####################################
     req_body = info_container['req_body']
@@ -777,6 +797,9 @@ def walkon(info_container,**kwargs):
     info_container['resp_body_bytes'] = resp_body_bytes
     info_container['resp'] = resp
     info_container['from_url'] = url
+    ###################
+    info_container = check_and_reopen_ifneeded(info_container)
+    ###################
     return(info_container)
 
 
