@@ -233,9 +233,55 @@ def stepping_req(conn,method,url_path,**kwargs):
 
 
 
+#this will error when the remote RST
+#>>> conn.sock
+#<ssl.SSLSocket fd=3, family=AddressFamily.AF_INET, type=2049, proto=6, laddr=('192.168.75.128', 41597)>
+#>>>
+#>>> conn.sock.getsockname()
+#('192.168.75.128', 41597)
+#>>> conn.sock.getpeername()
+#Traceback (most recent call last):
+#  File "<stdin>", line 1, in <module>
+#OSError: [Errno 107] Transport endpoint is not connected
+#>>>
+#this happend when the remote send RST
+#<REMOTE IP_ADD> 192.168.75.128	TCP	54	https > 41597 [RST, ACK] Seq=3517 Ack=1109 Win=64240 Len=0
+
 def linux_check_tcp_state_via_conn(conn):
-    LA  = ''.join((conn.sock.getsockname()[0],':',str(conn.sock.getsockname()[1])))
-    FA = ''.join((conn.sock.getpeername()[0],':',str(conn.sock.getpeername()[1])))
+    if(conn==None):
+        return("_CONN_NONE")
+    elif(conn.sock == None):
+        return("_SOCK_NONE")
+    else:
+        
+    '''#this will error when the remote RST
+       #>>> conn.sock
+       #<ssl.SSLSocket fd=3, family=AddressFamily.AF_INET, type=2049, proto=6, laddr=('192.168.75.128', 41597)>
+       #>>>
+       #>>> conn.sock.getsockname()
+       #('192.168.75.128', 41597)
+       #>>> conn.sock.getpeername()
+       #Traceback (most recent call last):
+       #  File "<stdin>", line 1, in <module>
+       #OSError: [Errno 107] Transport endpoint is not connected
+       #>>>
+       #this happend when the remote send RST
+       #<REMOTE IP_ADD> 192.168.75.128 TCP    54    https > 41597 [RST, ACK] Seq=3517 Ack=1109 Win=64240 Len=0
+    '''
+    LA = None
+    FA = None
+    try:
+        LA  = ''.join((conn.sock.getsockname()[0],':',str(conn.sock.getsockname()[1])))
+    except:
+        return("_LOCAL_NONE")
+    else:
+        pass
+    try:
+        FA = ''.join((conn.sock.getpeername()[0],':',str(conn.sock.getpeername()[1])))
+    except:
+        return("_REMOTE_NONE")
+    else:
+        pass
     egrep_RE_string = ''.join((LA,'[ ]+',FA))
     shell_CMDs = {}
     shell_CMDs[1] = 'netstat -n'
@@ -598,16 +644,35 @@ def check_and_reopen_ifneeded(info_container):
     if('linux' in platform.system().lower()):
         if(info_container['conn']):
             state = linux_check_tcp_state_via_conn(info_container['conn'])
-            #print(state)
+            #
             if(state.upper() ==  'ESTABLISHED'):
                 pass
             elif(state.upper() ==  'CLOSE_WAIT'):
-                #print("---closing----")
+                print("---reopen new reason: {0}----".format(state))
                 shutdown(info_container)
                 info_container['conn'] = None
                 info_container['shutdown'] = 0
                 info_container['reopened'] = 1
-                info_container['reopen_reason']= 'CLOSE_WAIT'
+                info_container['reopen_reason']= state.upper()
+            elif('' == state):
+                print("---reopen new reason: _CANT_FIND----")
+                shutdown(info_container)
+                info_container['conn'] = None
+                info_container['shutdown'] = 0
+                info_container['reopened'] = 1
+                info_container['reopen_reason']= state.upper()
+            elif('_'==state.upper()[0]):
+                #Some me defined state such as 
+                #_CONN_NONE
+                #_SOCK_NONE
+                #_LOCAL_NONE
+                #_REMOTE_NONE
+                print("---reopen new reason: {0}----".format(state))
+                shutdown(info_container)
+                info_container['conn'] = None
+                info_container['shutdown'] = 0
+                info_container['reopened'] = 1
+                info_container['reopen_reason']= state.upper()
             else:
                 #for other TCP state need to add some code
                 pass
