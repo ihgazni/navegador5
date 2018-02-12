@@ -689,12 +689,16 @@ def walkon(info_container,**kwargs):
     if('timeout' in kwargs):
         timeout = kwargs['timeout']
     else:
-        timeout = 30
+        timeout = 60
     if(step == 0):
         conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
     else:
         if(conn.sock == None):
-            conn.close()
+            ####@@@@@
+            print("step:{0}".format(step))
+            print(conn)
+            #conn.close()
+            #@@@@@
             conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
         else:
             if(conn==None):
