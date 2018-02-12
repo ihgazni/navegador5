@@ -402,9 +402,12 @@ def stepping_resp(conn,client_close_when_recv_Connection_close=0):
             print("ex keepalive")
             pass
         elif(v == "close"):
+            print("ex close")
             if(client_close_when_recv_Connection_close):
+                print("        :client do close")
                 conn.close()
             else:
+                print("        :wait for server for ex close")
                 pass
         else:
             print("im keepalive")
