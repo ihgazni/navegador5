@@ -245,7 +245,7 @@ def linux_record_state_change(conn,check_interval=1,count=500):
         try:
             rslt = linux_check_tcp_state(conn)
             if(rslt == prev_rslt):
-                pass                
+                print(rslt)                
             else:
                 t = time.time()
                 diff_t = t - prev_t
