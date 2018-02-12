@@ -298,31 +298,29 @@ def linux_record_state_change_via_ipport(src_ip,src_port,dst_ip,dst_port,check_i
     init_t = prev_t
     meeted = 0
     while(1):
-        try:
-            rslt = linux_check_tcp_state_via_ipport(src_ip,src_port,dst_ip,dst_port)
-            if(rslt == prev_rslt):
-                print(rslt)
-            else:
-                t = time.time()
-                diff_t = t - prev_t
-                print("from {0} to {1} afte {2} secs".format(prev_rslt,rslt,diff_t))
-                records.append((rslt,diff_t))
-                prev_rslt = rslt
-                prev_t = t
-        except:
-            rslt = ""
+        rslt = linux_check_tcp_state_via_ipport(src_ip,src_port,dst_ip,dst_port)
+        if(rslt == ""):
+            pass
+        else:
+            meeted = 1
+        if(rslt == prev_rslt):
+	    print(rslt)
+        else:
+	    t = time.time()
+            diff_t = t - prev_t
+	    print("from {0} to {1} afte {2} secs".format(prev_rslt,rslt,diff_t))
+	    records.append((rslt,diff_t))
+	    prev_rslt = rslt
+	    prev_t = t
+        if((meeted==1)&(rslt =="")):
             t =time.time()
             diff_t = t - prev_t
             records.append((rslt,diff_t))
-            if(meeted==1):
-                total_t = t - init_t
-                print("{0}seconds elapsed finally".format(total_t))
-                break
-            else:
-                pass
+            total_t = t - init_t
+            print("{0}seconds elapsed finally".format(total_t))
+            break
         else:
-            meeted = 1
-            print("meeted:{0}".format(meeted))
+            pass
         time.sleep(check_interval)
     return(records)
 
