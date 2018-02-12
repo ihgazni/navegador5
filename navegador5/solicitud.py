@@ -28,8 +28,13 @@ def shutdown(info_container,how=socket.SHUT_WR):
        SHUT_WR:关闭写功能，即不能使用send/write等
        除此之外，还将缓冲区中的内容清空
     '''
-    info_container['conn'].sock.shutdown(how)
-    info_container['conn'].sock.close()
+    try:
+        info_container['conn'].sock.shutdown(how)
+        info_container['conn'].sock.close()
+    except:
+        pass
+    else:
+        pass
     info_container['shutdown'] = 1
     return(info_container)
 
@@ -654,7 +659,7 @@ def check_and_reopen_ifneeded(info_container):
                 info_container['shutdown'] = 0
                 info_container['reopened'] = 1
                 info_container['reopen_reason']= state.upper()
-            elif('' == state):
+            elif(''==state.upper()):
                 print("---reopen new reason: _CANT_FIND----")
                 shutdown(info_container)
                 info_container['conn'] = None
