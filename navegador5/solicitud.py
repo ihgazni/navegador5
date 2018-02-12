@@ -3,7 +3,7 @@
 import http.client
 import urllib.parse
 import time
-import date
+import datetime
 import operator
 from navegador5 import url_tool
 from navegador5 import shell_cmd
