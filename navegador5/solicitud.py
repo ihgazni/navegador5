@@ -266,6 +266,7 @@ def linux_record_state_change(conn,check_interval=1,count=500):
                 pass
         else:
             meeted = 1
+        time.sleep(check_interval)
     return(records) 
     
 
