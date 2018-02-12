@@ -261,7 +261,7 @@ def linux_record_state_change(conn,check_interval=1):
             break
         else:
             pass
-   return(records) 
+    return(records) 
     
 
 
