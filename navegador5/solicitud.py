@@ -598,11 +598,11 @@ def check_and_reopen_ifneeded(info_container):
     if('linux' in platform.system().lower()):
         if(info_container['conn']):
             state = linux_check_tcp_state_via_conn(info_container['conn'])
-            print(state)
+            #print(state)
             if(state.upper() ==  'ESTABLISHED'):
                 pass
             elif(state.upper() ==  'CLOSE_WAIT'):
-                print("---closing----")
+                #print("---closing----")
                 shutdown(info_container)
                 info_container['conn'] = None
                 info_container['shutdown'] = 0
@@ -694,6 +694,7 @@ def walkon(info_container,**kwargs):
     # root@ubuntu:~# netstat | egrep "(https|http)"
     # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
     info_container = check_and_reopen_ifneeded(info_container)
+    conn = info_container['conn']
     #---------------for CLOSE_WAIT  bug--------------
     #####################################
     req_body = info_container['req_body']
