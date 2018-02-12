@@ -235,16 +235,17 @@ def linux_check_tcp_state(conn):
     state = shell_cmd.pipe_shell_cmds(shell_CMDs)[0].decode().strip('\n').strip(' ')
     return(state)
 
-def linux_record_state_change(conn,check_interval=1):
+def linux_record_state_change(conn,check_interval=1,count=500):
     records = [("",0)]
     prev_rslt = ""
     prev_t = time.time()
-    init_t = prev_t
+    init_t = prev_t    
+    meeted = 0
     while(1):
         try:
             rslt = linux_check_tcp_state(conn)
             if(rslt == prev_rslt):
-                pass
+                pass                
             else:
                 t = time.time()
                 diff_t = t - prev_t
@@ -257,11 +258,14 @@ def linux_record_state_change(conn,check_interval=1):
             t =time.time()
             diff_t = t - prev_t
             records.append((rslt,diff_t))
-            total_t = t - init_t
-            print("{0}seconds elapsed finally".format(total_t))
-            break
+            if(meeted==1):
+                total_t = t - init_t
+                print("{0}seconds elapsed finally".format(total_t))
+                break
+            else:
+                pass
         else:
-            pass
+            meeted = 1
     return(records) 
     
 
