@@ -11,7 +11,7 @@ from navegador5 import head
 from navegador5 import body
 from navegador5.cookie import cookie
 from navegador5 import time_utils
-import platform
+
 import socket
 
 #############
@@ -96,9 +96,7 @@ def new_info_container():
         'auto_update_cookie':0,
         'auto_redirected':0,
         'shutdown':0,
-        'inuse':0,
-        'reopened':0,
-        'reopen_reason':''
+        'inuse':0
     }
     return(info_template)
 
@@ -636,40 +634,6 @@ def walkon(info_container,**kwargs):
     #    pass
     #
     #body is string or bytes
-    ######################################
-    #---------------for CLOSE_WAIT  bug---------------
-    #---------------when using http1.1 long-persistant keep-alive feature------------
-    #---------------if the server send FIN,PSH,ACK, and the client response ACK
-    #---------------client will stuck in CLOSE_WAIT state, even if NO anything in recv buffer
-    #121.29.8.170	192.168.75.128	TCP	54	http > 33815 [FIN, PSH, ACK] Seq=15816 Ack=364 Win=64240 Len=0
-    #192.168.75.128	121.29.8.170	TCP	60	33815 > http [ACK] Seq=364 Ack=15817 Win=59860 Len=0
-
-    # root@ubuntu:~# netstat | egrep "(https|http)"
-    # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
-    # root@ubuntu:~# netstat | egrep "(https|http)"
-    # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
-    # root@ubuntu:~# netstat | egrep "(https|http)"
-    # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
-    # root@ubuntu:~# netstat | egrep "(https|http)"
-    # tcp        1      0 192.168.75.128:33815    121.29.8.170:http       CLOSE_WAIT
-    if('linux' in platform.system().lower()):
-        state = linux_check_tcp_state_via_conn(info_container['conn'])
-        if(state.upper() ==  'ESTABLISHED'):
-            pass
-        elif(state.upper() ==  'CLOSE_WAIT'):
-            shutdown(info_container)
-            info_container['conn'] = None
-            info_container['shutdown'] = 0
-            info_container['reopened'] = 1
-            info_container['reopen_reason']= 'CLOSE_WAIT'
-        else:
-            #for other TCP state need to add some code
-            pass
-    else:
-        #for windows need add some code
-        pass
-    #---------------for CLOSE_WAIT  bug--------------
-    #####################################
     req_body = info_container['req_body']
     if(info_container['method'] == 'GET'):
         try:
@@ -734,22 +698,19 @@ def walkon(info_container,**kwargs):
     if(step == 0):
         conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
     else:
-        if(conn==None):
-             conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
+        if(conn.sock == None):
+            ####@@@@@
+            #print("step:{0}".format(step))
+            #print(conn)
+            #release resource
+            conn.close()
+            ######
+            #@@@@@
+            conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
         else:
-            if(conn.sock == None):
-                ####@@@@@
-                #print("step:{0}".format(step))
-                #print(conn)
-                #release resource
-                conn.close()
-                ######
-                #@@@@@
+            if(conn==None):
                 conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
             else:
-                #if(conn==None):
-                #    conn = connection(url_scheme,url_Netloc,port=port,timeout=timeout)
-                #else:
                 conn = conn
     #encode_chunked only supportted in python3.6
     if('encode_chunked' in kwargs):
