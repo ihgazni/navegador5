@@ -296,10 +296,21 @@ def linux_check_tcp_state_via_conn(conn):
     return(state)
 
 def getipport_from_conn(conn):
-    src_ip =conn.sock.getsockname()[0]
-    src_port = conn.sock.getsockname()[1]
-    dst_ip = conn.sock.getpeername()[0]
-    dst_port = conn.sock.getpeername()[1]
+    src_ip,src_port,dst_ip,dst_port = (None,None,None,None)
+    try:
+        src_ip =conn.sock.getsockname()[0]
+        src_port = conn.sock.getsockname()[1]
+    except:
+        pass
+    else:
+        pass
+    try:
+        dst_ip = conn.sock.getpeername()[0]
+        dst_port = conn.sock.getpeername()[1]
+    except:
+        pass
+    else:
+        pass
     return((src_ip,src_port,dst_ip,dst_port))
 
 def linux_check_tcp_state_via_ipport(src_ip,src_port,dst_ip,dst_port):
