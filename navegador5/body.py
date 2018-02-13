@@ -41,7 +41,7 @@ def get_eles_via_xpath(info_container,xpath,**kwargs):
         coding = kwargs['coding']
     else:
         coding = 'utf-8'
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
@@ -55,7 +55,7 @@ def get_preceding_siblings_via_xpath(info_container,xpath):
         coding = kwargs['coding']
     else:
         coding = 'utf-8'
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
@@ -72,7 +72,7 @@ def get_preceding_siblings_via_xpath_flat(info_container,xpath,**kwargs):
         coding = kwargs['coding']
     else:
         coding = 'utf-8'
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
@@ -88,7 +88,7 @@ def get_following_siblings_via_xpath(info_container,xpath):
         coding = kwargs['coding']
     else:
         coding = 'utf-8'
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
@@ -106,7 +106,7 @@ def get_following_siblings_via_xpath_flat(info_container,xpath,**kwargs):
         coding = kwargs['coding']
     else:
         coding = 'utf-8'
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
@@ -123,7 +123,7 @@ def get_next_siblings_via_xpath(info_container,xpath,**kwargs):
         coding = kwargs['coding']
     else:
         coding = 'utf-8'
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
@@ -142,7 +142,7 @@ def get_previous_siblings_via_xpath(info_container,xpath,**kwargs):
         coding = kwargs['coding']
     else:
         coding = 'utf-8'
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
@@ -166,7 +166,7 @@ def get_which_sibling_via_xpath(info_container,xpath,which,**kwargs):
         backwards = kwargs['backwards']
     else:
         backwards = 0
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
@@ -189,7 +189,7 @@ def get_all_siblings_via_xpath(info_container,xpath,**kwargs):
         include_self = kwargs['include_self']
     else:
         include_self = 0
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
@@ -208,7 +208,7 @@ def get_some_siblings_via_xpath(info_container,xpath,seq_list,**kwargs):
         coding = kwargs['coding']
     else:
         coding = 'utf-8'
-    if(type(info_container) == type(dict{})):
+    if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
         pass
