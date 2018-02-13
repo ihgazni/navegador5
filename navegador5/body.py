@@ -13,6 +13,222 @@ import lxml.html
 import base64
 
 ##
+## API NAME  IS    I-M-P-O-R-T-A-N-T !!! 
+## refer to MDN API NAME
+##          XPATH axis NAME
+##          jQuery API NAME 
+##people like instinctive , and then like their custom.          
+##          people's instinctive meaning, the word meaning of word! dont do futher as possible as you can!
+##
+
+def get_etree_root(info_container,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type("")):
+        html_text = info_container
+    elif(type(info_container) == type(b'')):
+        html_text = info_container.decode(coding)
+    else:
+        html_text = info_container['resp_body_bytes'].decode(coding)
+    root = etree.HTML(html_text)
+    return(root)
+###
+
+def get_eles_via_xpath(info_container,xpath,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    eles = root.xpath(xpath)
+    return(eles)
+
+
+def get_preceding_siblings_via_xpath(info_container,xpath):
+    '''return a  nested "array in array"'''
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    eles = root.xpath(xpath)
+    rslt =[]
+    for i in range(0,eles.__len__()):
+        ele = precedingSiblings(node)
+        rslt.append(ele)
+    return(rslt)
+
+
+def get_preceding_siblings_via_xpath_flat(info_container,xpath,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    xpath = xpath.rstrip('/')+'/preceding-sibling::*'
+    eles = root.xpath(xpath)
+    return(eles)
+
+
+
+def get_following_siblings_via_xpath(info_container,xpath):
+    '''return a  nested "array in array"'''
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    eles = root.xpath(xpath)
+    rslt =[]
+    for i in range(0,eles.__len__()):
+        ele = followingSiblings(node)
+        rslt.append(ele)
+    return(rslt)
+
+
+
+def get_following_siblings_via_xpath_flat(info_container,xpath,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    xpath = xpath.rstrip('/')+'/following-sibling::*'
+    eles = root.xpath(xpath)
+    return(eles)
+
+
+
+#
+
+def get_next_siblings_via_xpath(info_container,xpath,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    eles = root.xpath(xpath)
+    rslt =[]
+    for i in range(0,eles.__len__()):
+        ele = nextSibling(eles[i])
+        rslt.append(ele) 
+    return(rslt)
+
+get_right_siblings_via_xpath = get_next_siblings_via_xpath
+get_rsibs_via_xpath = get_next_siblings_via_xpath
+
+def get_previous_siblings_via_xpath(info_container,xpath,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    eles = root.xpath(xpath)
+    rslt =[]
+    for i in range(0,eles.__len__()):
+        ele = previousSibling(eles[i])
+        rslt.append(ele)    
+    return(rslt)
+
+get_left_siblings_via_xpath = get_previous_siblings_via_xpath
+get_lsibs_via_xpath = get_previous_siblings_via_xpath
+
+
+def get_which_sibling_via_xpath(info_container,xpath,which,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if('backwards' in kwargs):
+        backwards = kwargs['backwards']
+    else:
+        backwards = 0
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    eles = root.xpath(xpath)
+    rslt =[]
+    for i in range(0,eles.__len__()):
+        ele = getSibling(node,which=which,backwards=backwards)
+        rslt.append(ele)
+    return(rslt)
+
+
+
+def get_all_siblings_via_xpath(info_container,xpath,**kwargs):
+    '''return a  nested "array in array"'''
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if('include_self' in kwargs):
+        include_self = kwargs['include_self']
+    else:
+        include_self = 0
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    eles = root.xpath(xpath)
+    rslt =[]
+    for i in range(0,eles.__len__()):
+        ele = allSiblings(node,include_self=include_self)
+        rslt.append(ele)
+    return(rslt)
+
+
+
+def get_some_siblings_via_xpath(info_container,xpath,seq_list,**kwargs):
+    '''return a  nested "dict in array in array"'''
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type(dict{})):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        pass
+    eles = root.xpath(xpath)
+    rslt =[]
+    for i in range(0,eles.__len__()):
+        ele = someSiblings(node,seq_list)
+        rslt.append(ele)
+    return(rslt)
+
+
+ 
+
+
+
+
+
+##
+
+##
 def etree_is_leaf_node(node):
     if(node.getchildren().__len__() == 0):
         return(True)
@@ -21,12 +237,35 @@ def etree_is_leaf_node(node):
 
 
 def etree_get_text(ele):
+    '''     <Why need itertext? >  
+        >>>html_text = '<html><body>TEXT<br/>TAIL</body></html>'
+        >>>root = etree.HTML(html_text)
+        >>>eles = root.xpath("//html/body")
+        >>>eles[0].text
+        'TEXT'
+        >>>eles[0].tail == None
+        True
+        >>> nvbody.etree_get_text(eles[0])
+        'TEXTTAIL'
+        >>>
+        >>>
+        >>> eles = root.xpath("//html/body/br")
+        >>> eles[0].text == None
+        True
+        >>> eles[0].tail
+        'TAIL'
+        >>> nvbody.etree_get_text(eles[0])
+        ''
+    >>>
+    '''    
     it = ele.itertext()
     texts = list(it)
     text = ''
     for i in range(0,texts.__len__()):
         text = text + texts[i]
     return(text)
+
+etree_itertext = etree_get_text
 
 
 def etree_path_array(node,include_self=1):
@@ -78,7 +317,7 @@ def etree_descedants_depth(node,withpathinfo=0):
         return(depth)
 
 
-
+#####
 
 def etree_siblings_info(node):
     parent = node.getparent()
@@ -89,7 +328,8 @@ def etree_siblings_info(node):
             curr_seq = i
         else:
             pass
-    return({'total':total,'seq':curr_seq,'parent':parent,'silbings':children})
+    return({'total':total,'seq':curr_seq,'parent':parent,'siblings':children})
+
 
 def etree_get_sibling(node,which,backwards=1):
     parent = node.getparent()
@@ -98,9 +338,10 @@ def etree_get_sibling(node,which,backwards=1):
     for i in range(0,total):
         if(node == children[i]):
             curr_seq = i
+            break
         else:
             pass
-    if(backwords):
+    if(backwards):
         seq = curr_seq - which
     else:
         seq = curr_seq + which
@@ -109,6 +350,64 @@ def etree_get_sibling(node,which,backwards=1):
     else:
         return(children[seq])
 
+getSibling = etree_get_sibling
+sibling = etree_get_sibling
+
+def nextSibling(node):
+    return(etree_get_sibling(node,1,backwards=0))
+
+rightSibling = nextSibling
+rsib = nextSibling
+
+def previousSibling(node):
+    return(etree_get_sibling(node,1,backwards=1))
+
+leftSibling = previousSibling
+lsib = previousSibling
+
+def followingSiblings(node):
+    info = etree_siblings_info(node)
+    seq = info['seq']
+    children = info['siblings']
+    return(children[(seq+1):])
+
+
+def precedingSiblings(node):
+    info = etree_siblings_info(node)
+    seq = info['seq']
+    children = info['siblings']
+    return(children[0:seq])
+
+def someSiblings(node,seq_list):
+    rslt = []
+    parent = node.getparent()
+    children = parent.getchildren()
+    total = children.__len__()
+    for i in range(0,total):
+        if(i in seq_list):
+            rslt.append({i:children[i]})
+        else:
+            pass
+    return(rslt)
+
+    
+
+
+def allSiblings(node,include_self=1):
+    info = etree_siblings_info(node)
+    seq = info['seq']
+    children = info['siblings']
+    if(include_self):
+        pass
+    else:
+        children.pop(seq)
+    return(children)
+
+
+
+
+
+#############################
 
 
 def etree_get_ancestor(node,previous):
