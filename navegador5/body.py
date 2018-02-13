@@ -48,7 +48,7 @@ def get_etree_root(info_container,**kwargs):
         html_text = info_container
     elif(type(info_container) == type(b'')):
         html_text = info_container.decode(coding)
-    elif((type(info_container) == type(dict({}))):
+    elif(type(info_container) == type(dict({}))):
         html_text = info_container['resp_body_bytes'].decode(coding)
     else:
         pass
