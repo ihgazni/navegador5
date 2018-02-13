@@ -452,8 +452,6 @@ def stepping_resp(conn,client_close_when_recv_Connection_close=0):
         print("resp_head: ")
         print(resp_head)
         #resp_body_bytes = None
-        print("resp_body_bytes: ")
-        print(resp_body_bytes)
         print("----resp_body Exception-----")
         raise RespBodyError()
     else:
