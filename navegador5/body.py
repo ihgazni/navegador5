@@ -22,7 +22,7 @@ import re
 ##          people's instinctive meaning, the word meaning of word! dont do futher as possible as you can!
 ##
 
-def text_cond(text,condmatch,*args)
+def text_cond(text,condmatch,*args):
     if(type(condmatch)==type("")):
         if(condmatch in text):
             return(True)
