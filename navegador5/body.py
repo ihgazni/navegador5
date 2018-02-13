@@ -11,6 +11,7 @@ import json
 from lxml import etree
 import lxml.html
 import base64
+import re
 
 ##
 ## API NAME  IS    I-M-P-O-R-T-A-N-T !!! 
@@ -21,6 +22,23 @@ import base64
 ##          people's instinctive meaning, the word meaning of word! dont do futher as possible as you can!
 ##
 
+def text_cond(text,condmatch,*args)
+    if(type(condmatch)==type("")):
+        if(condmatch in text):
+            return(True)
+        else:
+            return(False)
+    elif(type(condmatch) == type(re.compile(""))):
+        m = condmatch.search(text)
+        if(m):
+            return(true)
+        else:
+            return(False)
+    else:
+        return(condmatch(text,*args))
+
+######
+
 def get_etree_root(info_container,**kwargs):
     if('coding' in kwargs):
         coding = kwargs['coding']
@@ -30,8 +48,10 @@ def get_etree_root(info_container,**kwargs):
         html_text = info_container
     elif(type(info_container) == type(b'')):
         html_text = info_container.decode(coding)
-    else:
+    elif((type(info_container) == type(dict({}))):
         html_text = info_container['resp_body_bytes'].decode(coding)
+    else:
+        pass
     root = etree.HTML(html_text)
     return(root)
 ###
@@ -44,9 +64,135 @@ def get_eles_via_xpath(info_container,xpath,**kwargs):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     eles = root.xpath(xpath)
     return(eles)
+
+
+def get_eles_via_xpath_textCond(info_container,xpath,*args,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if('cond' in kwargs):
+        cond = kwargs['cond']
+    else:
+        cond = ''
+    if(type(info_container) == type(dict({}))):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        root = info_container
+    rslt = [] 
+    eles = root.xpath(xpath)
+    for i in range(0,eles.__len__()):
+        if(text_cond(eles[i].text,cond,*args)):
+            rslt.append(eles[i])
+        else:
+            pass
+    return(rslt)
+
+def get_eles_via_xpath_tailCond(info_container,xpath,*args,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if('cond' in kwargs):
+        cond = kwargs['cond']
+    else:
+        cond = ''
+    if(type(info_container) == type(dict({}))):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        root = info_container
+    rslt = []
+    eles = root.xpath(xpath)
+    for i in range(0,eles.__len__()):
+        if(text_cond(eles[i].tail,cond,*args)):
+            rslt.append(eles[i])
+        else:
+            pass
+    return(rslt)
+
+
+def get_eles_via_xpath_iterTextCond(info_container,xpath,*args,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if('cond' in kwargs):
+        cond = kwargs['cond']
+    else:
+        cond = ''
+    if(type(info_container) == type(dict({}))):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        root = info_container
+    rslt = []
+    eles = root.xpath(xpath)
+    for i in range(0,eles.__len__()):
+        if(text_cond(etree_get_text(eles[i]),cond,*args)):
+            rslt.append(eles[i])
+        else:
+            pass
+    return(rslt)
+
+
+
+
+def get_eles_via_xpath_attribValueCond(info_container,xpath,*args,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if('cond' in kwargs):
+        cond = kwargs['cond']
+    else:
+        cond = ''
+    if('attri_bname' in kwargs):
+        attribname = kwargs['attrib_name']
+    else:
+        attribname = ''
+    if(type(info_container) == type(dict({}))):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        root = info_container
+    rslt = []
+    eles = root.xpath(xpath)
+    for i in range(0,eles.__len__()):
+        if(text_cond(eles[i].get(attribname),cond,*args)):
+            rslt.append(eles[i])
+        else:
+            pass
+    return(rslt)
+
+
+def get_eles_via_xpath_attribNameCond(info_container,xpath,*args,**kwargs):
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if('cond' in kwargs):
+        cond = kwargs['cond']
+    else:
+        cond = ''
+    if(type(info_container) == type(dict({}))):
+        root = get_etree_root(info_container,coding=coding)
+    else:
+        root = info_container
+    rslt = []
+    eles = root.xpath(xpath)
+    for i in range(0,eles.__len__()):
+        keys = eles[i].attrib.keys()
+        for attribname in keys:
+            if(text_cond(eles[i].get(attribname),cond,*args)):
+                rslt.append(eles[i])
+                break
+            else:
+                pass
+    return(rslt)
+
+
+
 
 
 def get_preceding_siblings_via_xpath(info_container,xpath):
@@ -58,7 +204,7 @@ def get_preceding_siblings_via_xpath(info_container,xpath):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     eles = root.xpath(xpath)
     rslt =[]
     for i in range(0,eles.__len__()):
@@ -75,7 +221,7 @@ def get_preceding_siblings_via_xpath_flat(info_container,xpath,**kwargs):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     xpath = xpath.rstrip('/')+'/preceding-sibling::*'
     eles = root.xpath(xpath)
     return(eles)
@@ -91,7 +237,7 @@ def get_following_siblings_via_xpath(info_container,xpath):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     eles = root.xpath(xpath)
     rslt =[]
     for i in range(0,eles.__len__()):
@@ -109,7 +255,7 @@ def get_following_siblings_via_xpath_flat(info_container,xpath,**kwargs):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     xpath = xpath.rstrip('/')+'/following-sibling::*'
     eles = root.xpath(xpath)
     return(eles)
@@ -126,7 +272,7 @@ def get_next_siblings_via_xpath(info_container,xpath,**kwargs):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     eles = root.xpath(xpath)
     rslt =[]
     for i in range(0,eles.__len__()):
@@ -145,7 +291,7 @@ def get_previous_siblings_via_xpath(info_container,xpath,**kwargs):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     eles = root.xpath(xpath)
     rslt =[]
     for i in range(0,eles.__len__()):
@@ -169,7 +315,7 @@ def get_which_sibling_via_xpath(info_container,xpath,which,**kwargs):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     eles = root.xpath(xpath)
     rslt =[]
     for i in range(0,eles.__len__()):
@@ -192,7 +338,7 @@ def get_all_siblings_via_xpath(info_container,xpath,**kwargs):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     eles = root.xpath(xpath)
     rslt =[]
     for i in range(0,eles.__len__()):
@@ -211,7 +357,7 @@ def get_some_siblings_via_xpath(info_container,xpath,seq_list,**kwargs):
     if(type(info_container) == type(dict({}))):
         root = get_etree_root(info_container,coding=coding)
     else:
-        pass
+        root = info_container
     eles = root.xpath(xpath)
     rslt =[]
     for i in range(0,eles.__len__()):
