@@ -77,7 +77,7 @@ def delete_cookie_via_name_from_cookie_str(ck_str,name,howmany=2**32):
             ntl.append(cktl[i])
     for j in range(i+1,cktl.__len__()):
         ntl.append(cktl[j])
-    return(cookie_tuple_list_to_str(ntl,withhead=0))
+    return(cookie_tuple_list_to_str(ntl,with_head=0))
 
 
 def delete_cookie_via_value_from_cookie_str(ck_str,value,howmany=2**32):
@@ -94,7 +94,7 @@ def delete_cookie_via_value_from_cookie_str(ck_str,value,howmany=2**32):
             ntl.append(cktl[i])
     for j in range(i+1,cktl.__len__()):
         ntl.append(cktl[j])
-    return(cookie_tuple_list_to_str(ntl,withhead=0))
+    return(cookie_tuple_list_to_str(ntl,with_head=0))
 
 
 
@@ -112,7 +112,7 @@ def delete_cookie_via_nameandvalue_from_cookie_str(ck_str,name,value,howmany=2**
             ntl.append(cktl[i])
     for j in range(i+1,cktl.__len__()):
         ntl.append(cktl[j])
-    return(cookie_tuple_list_to_str(ntl,withhead=0))
+    return(cookie_tuple_list_to_str(ntl,with_head=0))
 
 
 
@@ -130,7 +130,7 @@ def delete_cookie_via_nameorvalue_from_cookie_str(ck_str,name,value,howmany=2**3
             ntl.append(cktl[i])
     for j in range(i+1,cktl.__len__()):
         ntl.append(cktl[j])
-    return(cookie_tuple_list_to_str(ntl,withhead=0))
+    return(cookie_tuple_list_to_str(ntl,with_head=0))
 
 
 
