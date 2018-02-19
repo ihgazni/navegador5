@@ -62,6 +62,21 @@ def add_cookie_to_req_head(req_head,ck):
     return(req_head)
 
 
+#
+def replace_cookie_with_cookie_str(ck_str_1,ck_str_2):
+    cktl1 = cookie_str_to_tuple_list(ck_str_1)
+    cktl2 = cookie_str_to_tuple_list(ck_str_2)
+    for i in  range(0,cktl1.__len__()):
+        name = cktl[i][0]
+        for j in  range(0,cktl2.__len__()):
+            if(name == cktl2[j][0]):
+                cktl[i][1] = cktl2[j][1]
+            else:
+                pass   
+    return(cookie_tuple_list_to_str(cktl1,with_head=0))
+
+
+
 
 def delete_cookie_via_name_from_cookie_str(ck_str,name,howmany=2**32):
     ntl = []
