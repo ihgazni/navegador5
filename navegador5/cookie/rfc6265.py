@@ -1534,7 +1534,7 @@ cks_prepend_with_dictList = cookieStr_prepend_with_dictList
   # 'TS013d8ed5=0105b6b7b661820adb08f47c5ea240ddfc5866334894c224bcaa1865eb72664797ad1905f3d90d64182687996238bb77e476bd5daa7bfa3381cca3fff2f42dba045a7bb096; Path=/; Secure; HTTPOnly'
  # )
 
- def help():
+def help():
     abbrev = '''
         ck    Cookie  
                   {
