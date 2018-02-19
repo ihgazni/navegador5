@@ -1452,32 +1452,38 @@ tl2header = tupleList_to_cookie_header
 
 
 def cookieStr_prepend_with_avstr(cks):
+    pass
 
 prepend_cks_with_avstr = cookieStr_prepend_with_avstr
 cks_prepend_with_avstr = cookieStr_prepend_with_avstr
 
 def cookieStr_prepend_with_tuple(cks):
+    pass
+
 
 prepend_cks_with_tuple = cks_prepend_with_tuple
 cks_prepend_with_tuple = cks_prepend_with_tuple
 
 def cookieStr_prepend_with_dict(cks):
-
+    pass
 
 prepend_cks_with_dict = cookieStr_prepend_with_dict
 cks_prepend_with_dict = cookieStr_prepend_with_dict
 
 def cookieStr_prepend_with_avstrList(cks):
+    pass
 
 prepend_cks_with_avstrList = cookieStr_prepend_with_avstrList
 cks_prepend_with_avstrList = cookieStr_prepend_with_avstrList
 
 def cookieStr_prepend_with_tupleList(cks):
+    pass
 
 prepend_cks_with_tupleList = cookieStr_prepend_with_tupleList
 cks_prepend_with_tupleList = cookieStr_prepend_with_tupleList
 
 def cookieStr_prepend_with_dictList(cks):
+    pass
 
 prepend_cks_with_dictList = cookieStr_prepend_with_dictList
 cks_prepend_with_dictList = cookieStr_prepend_with_dictList
