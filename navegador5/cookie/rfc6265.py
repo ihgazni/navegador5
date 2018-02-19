@@ -1461,8 +1461,8 @@ def cookieStr_prepend_with_tuple(cks):
     pass
 
 
-prepend_cks_with_tuple = cks_prepend_with_tuple
-cks_prepend_with_tuple = cks_prepend_with_tuple
+prepend_cks_with_tuple = cksStr_prepend_with_tuple
+cks_prepend_with_tuple = cksStr_prepend_with_tuple
 
 def cookieStr_prepend_with_dict(cks):
     pass
