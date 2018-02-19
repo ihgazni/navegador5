@@ -1074,7 +1074,7 @@ def tuple2avstr(t,do_quote=False):
         pass
     return(k+'='+v)
 
-def dict2avstr(d,do_quote=False)
+def dict2avstr(d,do_quote=False):
     k = d.keys()[0]
     v = d.values()[0]
     if(do_quote):
