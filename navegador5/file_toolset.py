@@ -1,6 +1,6 @@
 from navegador5 import shell_cmd
 import os
-
+import json
 import chardet
 
 def convert_code(to_codec="UTF8",**kwargs):
@@ -20,11 +20,22 @@ def write_to_file(**kwargs):
     fd.write(kwargs['content'])
     fd.close()
     
+def write_json(**kwargs):
+    content = json.dumps(kwargs['json'])
+    kwargs['content'] = content
+    write_to_file(**kwargs)
+
 def read_file_content(**kwargs):
     fd = open(kwargs['fn'],kwargs['op'])
     rslt = fd.read()
     fd.close()
     return(rslt)
+
+def read_json(**kwargs):
+    rslt = read_file_content(**kwargs)
+    js = json.loads(rslt)
+    return(js)
+
 
 def prepend_to_file(prepend,**kwargs):
     prepend=bytes(prepend)

@@ -12,6 +12,8 @@ from lxml import etree
 import lxml.html
 import base64
 import re
+import os
+
 
 ##
 ## API NAME  IS    I-M-P-O-R-T-A-N-T !!! 
@@ -807,3 +809,27 @@ def decode_src(src):
         else:
             rslt['data'] = data
     return(rslt)
+
+
+
+
+
+
+
+
+
+
+#form
+
+def get_form_url(etree_form,url):
+    '''
+    '''
+    dirname,basename = os.path.split(url)
+    action_dirname,action_basename = os.path.split(etree_form.attrib['action'])
+    if(action_dirname == '.'):
+        return(dirname+'/'+action_basename)
+    else:
+        return(etree_form.attrib['action'])
+
+
+

@@ -451,3 +451,16 @@ def urlencode_ordered(decoded_tuple_list,**kwargs):
         rslt_str = rslt_str.replace("+","%20")
     return(rslt_str)
 
+
+def get_abs_url(rel_url,url):
+    '''
+    '''
+    dirname,basename = os.path.split(url)
+    action_dirname,action_basename = os.path.split(rel_url)
+    if(action_dirname == '.'):
+        return(dirname+'/'+action_basename)
+    else:
+        return(rel_url)
+
+
+
