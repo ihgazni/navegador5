@@ -41,6 +41,30 @@ def text_cond(text,condmatch,*args):
 
 ######
 
+def get_html_text(info_container,**kwargs):
+    '''
+        要实现Content-Type的优先级
+        header 中的
+        body meta 中的
+        
+    '''
+    if('coding' in kwargs):
+        coding = kwargs['coding']
+    else:
+        coding = 'utf-8'
+    if(type(info_container) == type("")):
+        html_text = info_container
+    elif(type(info_container) == type(b'')):
+        html_text = info_container.decode(coding)
+    elif(type(info_container) == type(dict({}))):
+        html_text = info_container['resp_body_bytes'].decode(coding)
+    else:
+        pass
+    return(html_text)
+
+def show_resp_body(ic,**kwargs):
+    print(get_html_text(info_container,**kwargs))
+
 def get_etree_root(info_container,**kwargs):
     if('coding' in kwargs):
         coding = kwargs['coding']
