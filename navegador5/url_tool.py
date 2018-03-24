@@ -2,6 +2,12 @@ import urllib.parse
 import os
 import re
 
+def get_origin(url):
+    rslt = urllib.parse.urlparse(url)
+    origin = rslt.scheme +'://'+rslt.netloc
+    return(origin)
+    
+
 def get_base_url(url):
     temp = urllib.parse.urlparse(url)
     netloc = temp.netloc

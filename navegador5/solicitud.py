@@ -96,6 +96,8 @@ def new_info_container():
         'method':None,
         'url': None, 
         'from_url':None,
+        'referer':None,
+        'origin':None,
         'step': 0, 
         'conn': None,
         'auto_update_cookie':0,
@@ -882,6 +884,9 @@ def walkon(info_container,**kwargs):
     info_container['resp_body_bytes'] = resp_body_bytes
     info_container['resp'] = resp
     info_container['from_url'] = url
+    ###################
+    info_container['referer'] = url
+    info_container['origin'] = url_tool.get_origin(url)
     ###################
     if(step<2):
         pass
