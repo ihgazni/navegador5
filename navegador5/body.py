@@ -13,7 +13,8 @@ import lxml.html
 import base64
 import re
 import os
-
+#for show 
+from xdict.cmdline import Hentry
 
 ##
 ## API NAME  IS    I-M-P-O-R-T-A-N-T !!! 
@@ -62,8 +63,18 @@ def get_html_text(info_container,**kwargs):
         pass
     return(html_text)
 
-def show_resp_body(ic,**kwargs):
-    print(get_html_text(info_container,**kwargs))
+def show_resp_body(ic,tag,**kwargs):
+    html_text = get_html_text(info_container,**kwargs)
+    htry = Hentry(html_text=html_text)
+    html_entry = htry.query(tag,**kwargs)
+    if('only_print' in kwargs):
+        only_print = kwargs['only_print']
+    else:
+        only_print = True
+    if(only_print):
+        return(None)
+    else:
+        return(html_entry)
 
 def get_etree_root(info_container,**kwargs):
     if('coding' in kwargs):
