@@ -493,7 +493,7 @@ def six_u2d(url):
     '''
     d = {}
     rslt = urllib.parse.urlparse(url)
-    for k in rel._fields:
+    for k in rslt._fields:
         d[k] = rslt.__getattribute__(k)
     return(d)
 
