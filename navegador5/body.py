@@ -63,8 +63,8 @@ def get_html_text(info_container,**kwargs):
         pass
     return(html_text)
 
-def show_resp_body(ic,tag,**kwargs):
-    html_text = get_html_text(info_container,**kwargs)
+def show_resp_body(ic,tag='html',**kwargs):
+    html_text = get_html_text(ic,**kwargs)
     htry = Hentry(html_text=html_text)
     html_entry = htry.query(tag,**kwargs)
     if('only_print' in kwargs):

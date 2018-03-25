@@ -581,4 +581,5 @@ def handle_cache_control(cache_control_text):
 # 3.如果 referer-policy 的值为 origin：只发送 origin 部分；
 # 4.如果 referer-policy 的值为 always：不改变http header 中的 referer 的值，注意：这种情况下，如果当前页面使用了 https 协议，而要加载的资源使用的是 http 协议，加载资源的请求头中也会携带 referer。
 
- 
+#https://w3c.github.io/webappsec-referrer-policy/
+#https://tools.ietf.org/html/rfc7231#section-5.5.2 
