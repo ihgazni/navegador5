@@ -70,8 +70,12 @@ def show_resp_body(ic,tag='html',**kwargs):
         qmask = kwargs['qmask']
     else:
         qmask = None
-    html_text = get_html_text(ic,**kwargs)
-    htry = Hentry(html_text=html_text)
+    if('htry' in ic):
+        htry = ic['htry']
+    else:
+        html_text = get_html_text(ic,**kwargs)
+        htry = Hentry(html_text=html_text)
+        ic['htry'] = htry
     if(qmask):
         htry.qmask(cmdstr = qmask)
     else:
