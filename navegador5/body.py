@@ -66,17 +66,24 @@ def get_html_text(info_container,**kwargs):
     return(html_text)
 
 def show_resp_body(ic,tag='html',**kwargs):
+    if('qmask' in kwargs):
+        qmask = kwargs['qmask']
+    else:
+        qmask = None
     html_text = get_html_text(ic,**kwargs)
     htry = Hentry(html_text=html_text)
-    html_entry = htry.query(tag,**kwargs)
-    if('only_print' in kwargs):
-        only_print = kwargs['only_print']
+    if(qmask):
+        htry.qmask(cmdstr = qmask)
     else:
-        only_print = True
-    if(only_print):
-        return(None)
-    else:
-        return(html_entry)
+        html_entry = htry.query(tag,**kwargs)
+        if('only_print' in kwargs):
+            only_print = kwargs['only_print']
+        else:
+            only_print = True
+        if(only_print):
+            return(None)
+        else:
+            return(html_entry)
 
 def get_etree_root(info_container,**kwargs):
     if('coding' in kwargs):
