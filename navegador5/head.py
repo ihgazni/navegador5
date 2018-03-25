@@ -526,7 +526,7 @@ def get_redirect_url(ic,**kwargs):
     t = str(type(ic))
     if(t == "<class 'http.client.HTTPResponse'>"):
         #resp
-        if(mode = 'abs'):
+        if(mode == 'abs'):
             return(get_abs_redirect_url_from_resp(ic,url))
         else:
             return(get_redirect_url_from_resp(ic))
