@@ -532,7 +532,7 @@ def get_redirect_url(ic,**kwargs):
             return(get_redirect_url_from_resp(ic))
     elif(t == "<class 'dict'>"):
         #info_container
-        if(mode = 'abs'):
+        if(mode == 'abs'):
             return(get_abs_redirect_url_from_resp(ic['resp'],ic['url']))
         else:
             return(get_redirect_url_from_resp(ic['resp']))
