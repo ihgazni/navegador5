@@ -494,6 +494,7 @@ def get_content_type_from_resp(resp):
 
 
 def get_redirect_url_from_resp(resp,**kwargs):
+    #301,302,303,307
     resp_headers = resp.getheaders()
     locs =  select_headers_via_key_from_tuple_list(resp_headers,'Location')
     length = locs.__len__()
