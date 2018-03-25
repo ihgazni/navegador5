@@ -868,3 +868,77 @@ def get_form_url(etree_form,url):
 
 
 
+def get_inputs_from_form(form):
+    eles = nvbody.get_eles_via_xpath(form,'//input')
+    eles_len = eles.__len__()    
+    query_tl = []
+    for i in range(0,eles_len):
+        ele = eles[i]
+        type = ele.attrib['type']
+        if(type == 'text'):
+            name = ele.attrib['name']
+            value = kwargs[name]
+            query_tl.append((name,value))
+        elif(type == 'password'):
+            name = ele.attrib['name']
+            value = kwargs[name]
+            query_tl.append((name,value))
+        elif(type == 'submit'):
+            try:
+                name = ele.attrib['name']
+                value = kwargs[name]
+                query_tl.append((name,value))
+            except:
+                print(ele.attrib)
+            else:
+                pass
+        elif(type == 'hidden'):
+            name = ele.attrib['name']
+            value = ele.attrib['value']
+            query_tl.append((name,value))
+        else:
+            pass
+    inputs = query_tl
+    return(inputs)
+
+
+def get_form_inputs(ic,**kwargs):
+    '''
+    '''
+    root = nvbody.get_etree_root(ic)
+    forms = nvbody.get_eles_via_xpath(root,'//form')
+    if('which' in kwargs):
+        which = kwargs['which']
+        form = forms[which]
+        return(get_inputs_from_form(form))
+    elif('some' in kwargs):
+        some = kwargs['some']
+        rslt = []
+        for i in range(0,some.__len__()):
+            form = forms[some[i]]
+            rslt.append(get_inputs_from_form(form))
+        return(rslt)
+    else:
+        rslt = []
+        for i in range(0,forms.__len__()):
+            form = forms[i]
+            rslt.append(get_inputs_from_form(form))
+        return(rslt)
+
+
+def build_query_str(inputs_tupleList,**kwargs):
+    '''
+    '''
+    inputs = inputs_tupleList
+    query_str = ''
+    for i in range(0,inputs.__len__()):
+        k = inputs[i][0]
+        v = inputs[i][1]
+        #此处没有问题，发送form时，需要urlencode
+        s = nvurl.urlencode({k:v})
+        query_str = query_str + '&' + s
+    query_str = query_str.lstrip('&')
+    return(query_str)
+
+
+
