@@ -507,7 +507,7 @@ def get_redirect_url_from_resp(resp,**kwargs):
         return(None)            
     else:
         loc = locs[0]
-        return(loc)
+        return(loc[1])
 
 
 
