@@ -524,13 +524,13 @@ def get_redirect_url(ic,**kwargs):
     else:
         pass
     t = str(type(ic))
-    if(t == "<class 'http.client.HTTPResponse'>"):
+    if( "http.client.HTTPResponse" in t):
         #resp
         if(mode == 'abs'):
             return(get_abs_redirect_url_from_resp(ic,url))
         else:
             return(get_redirect_url_from_resp(ic))
-    elif(t == "<class 'dict'>"):
+    elif('dict' in t):
         #info_container
         if(mode == 'abs'):
             return(get_abs_redirect_url_from_resp(ic['resp'],ic['url']))
