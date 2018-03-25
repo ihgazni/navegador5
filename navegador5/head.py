@@ -494,12 +494,14 @@ def get_content_type_from_resp(resp):
 
 
 def get_redirect_url_from_resp(resp,**kwargs):
-    if(resp.status == 302):
-        resp_headers = resp.getheaders()
-        loc =  select_headers_via_key_from_tuple_list(resp_headers,'Location')[0]
-        return(loc)            
+    resp_headers = resp.getheaders()
+    locs =  select_headers_via_key_from_tuple_list(resp_headers,'Location')
+    length = locs.__len__()
+    if(length == 0):
+        return(None)            
     else:
-        return(None)
+        loc = locs[0]
+        return(loc)
 
 
 
