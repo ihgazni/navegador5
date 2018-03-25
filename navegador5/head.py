@@ -550,4 +550,35 @@ def handle_cache_control(cache_control_text):
             print('submit the request to the origin server for validation before releasing a cached copy.')
         elif('only-if-cached' in v):
             print('only wishes to obtain a cached response, and should not contact the origin-server to see if a newer copy exists')
-            
+           
+
+
+######
+
+#referer:
+#referer存在于所有请求，而origin只存在于post请求
+#referer显示来源页面的完整地址，而origin显示来源页面的origin: protocal+host
+#Location 等导致的redirect 不在referer/origin 链中
+#这个功能放到records中实现
+
+# referer 的 metedata 参数可以设置为以下几种类型的值：
+
+# never
+# always
+# origin
+# default
+
+# 如果在文档中插入 meta 标签，并且 name 属性的值为 referer，浏览器客户端将按照如下步骤处理这个标签：
+
+# 1.如果 meta 标签中没有 content 属性，则终止下面所有操作
+# 2.将 content 的值复制给 referrer-policy ，并转换为小写
+# 3.检查 content 的值是否为上面 list 中的一个，如果不是，则将值置为 default
+
+# 上述步骤之后，浏览器后续发起 http 请求的时候，会按照 content 的值，做出如下反应(下面 referer-policy 的值即 meta 标签中 content 的值)：
+
+# 1.如果 referer-policy 的值为never：删除 http head 中的 referer；
+# 2.如果 referer-policy 的值为default：如果当前页面使用的是 https 协议，而正要加载的资源使用的是普通的 http 协议，则将 http header 中的 referer 置为空；
+# 3.如果 referer-policy 的值为 origin：只发送 origin 部分；
+# 4.如果 referer-policy 的值为 always：不改变http header 中的 referer 的值，注意：这种情况下，如果当前页面使用了 https 协议，而要加载的资源使用的是 http 协议，加载资源的请求头中也会携带 referer。
+
+ 
