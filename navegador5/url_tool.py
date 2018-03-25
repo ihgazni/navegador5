@@ -461,6 +461,122 @@ def urlencode_ordered(decoded_tuple_list,**kwargs):
     return(rslt_str)
 
 ######
+######六元组
+######(scheme, netloc, path, params, query, fragment)
+#####
+def six_tn():
+    return(['scheme', 'netloc', 'path', 'params', 'query', 'fragment'])
+
+def six_md():
+    md = {
+        'path': 2,
+        'netloc': 1,
+        'fragment': 5,
+        'params': 3,
+        'scheme': 0,
+        'query': 4,
+        0:'scheme',
+        1:'netloc',
+        2:'path',
+        3:'params',
+        4:'query',
+        5:'fragment'
+    }
+    return(md)
+
+
+
+def six_u2d(url):
+    '''
+        url = 'http://www.baidu.com/index.php;params?username=query#frag'
+        pobj(six_u2d(url))
+    '''
+    d = {}
+    rslt = urllib.parse.urlparse(url)
+    for k in rel._fields:
+        d[k] = rslt.__getattribute__(k)
+    return(d)
+
+def six_u2t(url):
+    '''
+        url = 'http://www.baidu.com/index.php;params?username=query#frag'
+        pobj(six_u2t(url))
+    '''
+    rslt = urllib.parse.urlparse(url)
+    t = (rslt.scheme,rslt.netloc,rslt.path,rslt.params,rslt.query,rslt.fragment)
+    return(t)
+
+def six_d2t(d):
+    '''
+        d = {
+            'path': '/index.php',
+            'netloc': 'www.baidu.com',
+            'fragment': 'frag',
+            'params': 'params',
+            'scheme': 'http',
+            'query': 'username=query'
+        }
+        t = six_d2t(d)
+        pobj(t)
+    '''
+    t = (d['scheme'],d['netloc'],d['path'],d['params'],d['query'],d['fragment'])
+    return(t)
+    
+
+def six_d2u(d):
+    '''
+        d = {
+            'path': '/index.php',
+            'netloc': 'www.baidu.com',
+            'fragment': 'frag',
+            'params': 'params',
+            'scheme': 'http',
+            'query': 'username=query'
+        }
+        url = six_d2u(d)
+        url
+    '''
+    t = six_d2t(d)
+    url = urllib.parse.urlunparse(t)
+    return(url)
+
+def six_t2d(t):
+    '''
+        t = ('http', 'www.baidu.com', '/index.php', 'params', 'username=query', 'frag')
+        pobj(six_t2d(t))
+    '''
+    d = {}
+    d['scheme'] = t[0]
+    d['netloc'] = t[1]
+    d['path'] = t[2]
+    d['params'] = t[3]
+    d['query'] = t[4]
+    d['fragment'] = t[5]
+    return(d)
+
+def six_t2u(t):
+    '''
+    '''
+    url = urllib.parse.urlunparse(t)
+    return(url)
+
+def six_set(url,**kwargs):
+    '''
+    '''
+    tn = six_tn()
+    d = six_u2d(url)
+    for k in kwargs:
+        rk = str.lower(k)
+        cond = (rk in tn)
+        if(cond):
+            d[rk] = kwargs[k]
+        else:
+            pass
+    url = six_d2u(d)
+    return(url)
+    
+
+
 
 def get_abs_url(rel_url,**kwargs):
     '''
@@ -480,15 +596,17 @@ def get_abs_url(rel_url,**kwargs):
         if(path == ''):
             abs_url = base
         elif(path[0] == '/'):
-            abs_url = origin + path
+            abs_url = origin + rel_url
         elif(path[:2] == './'):
-            abs_url = os.path.split(base)[0] + '/' + path[2:]
+            rel_url = six_set(rel_url,path = path[2:])
+            abs_url = os.path.split(base)[0] + '/' + rel_url
         elif(path[:3] == '../'):
             parent = os.path.split(base)[0]
             pp = os.path.split(parent)[0]
-            abs_url = pp + '/' + path[3:]
+            rel_url = six_set(rel_url,path = path[3:])
+            abs_url = pp + '/' + rel_url
         else:
-            abs_url = os.path.split(base)[0] + '/' + path
+            abs_url = os.path.split(base)[0] + '/' + rel_url
         return(abs_url)
     else:
         return(rel) 

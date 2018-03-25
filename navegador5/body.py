@@ -15,6 +15,8 @@ import re
 import os
 #for show 
 from xdict.cmdline import Hentry
+import html
+
 
 ##
 ## API NAME  IS    I-M-P-O-R-T-A-N-T !!! 
@@ -864,8 +866,8 @@ def get_form_url(etree_form,url):
     if(action_dirname == '.'):
         return(dirname+'/'+action_basename)
     else:
-        return(etree_form.attrib['action'])
-
+        form_url = etree_form.attrib['action']
+        return(html.unescape(form_url))
 
 
 def get_inputs_from_form(form):
