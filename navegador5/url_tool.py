@@ -2,6 +2,9 @@ import urllib.parse
 import os
 import re
 
+
+
+
 def get_origin(url):
     rslt = urllib.parse.urlparse(url)
     origin = rslt.scheme +'://'+rslt.netloc
@@ -457,16 +460,37 @@ def urlencode_ordered(decoded_tuple_list,**kwargs):
         rslt_str = rslt_str.replace("+","%20")
     return(rslt_str)
 
+######
 
-def get_abs_url(rel_url,url):
+def get_abs_url(rel_url,**kwargs):
     '''
+        purl =  "http://www.example.com/index.html"
+        rel_url = "../zzz/checker.jsp" 
+        base = "http://localhost:8080/mysite/xxx/login.jsp"
+        
     '''
-    dirname,basename = os.path.split(url)
-    action_dirname,action_basename = os.path.split(rel_url)
-    if(action_dirname == '.'):
-        return(dirname+'/'+action_basename)
+    base = kwargs['base']
+    origin = get_origin(base)
+    ####
+    rel = urllib.parse.urlparse(rel_url)
+    scheme = rel.scheme
+    netloc = rel.netloc
+    path = rel.path
+    if(scheme == ''):
+        if(path == ''):
+            abs_url = base
+        elif(path[0] == '/'):
+            abs_url = origin + path
+        elif(path[:2] == './'):
+            abs_url = os.path.split(base)[0] + '/' + path[2:]
+        elif(path[:3] == '../'):
+            parent = os.path.split(base)[0]
+            pp = os.path.split(parent)[0]
+            abs_url = pp + '/' + path[3:]
+        else:
+            abs_url = os.path.split(base)[0] + '/' + path
+        return(abs_url)
     else:
-        return(rel_url)
-
+        return(rel) 
 
 

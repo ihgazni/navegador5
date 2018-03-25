@@ -3,6 +3,7 @@ import re
 from navegador5 import url_tool
 from navegador5 import time_utils
 
+
 #
 HEAD_POOL = [
     '''User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2\r\nAccept-Encoding: gzip, deflate, br''',
@@ -409,7 +410,11 @@ def name_value_exist_in_headers(rheaders,header,HV):
     return(0)
 
 
-def select_headers_via_key_from_tuple_list(headers_turple_array,key):
+def select_headers_via_key_from_tuple_list(headers_turple_array,key,**kwargs):
+    if('mode' in kwargs):
+        mode = kwargs['mode']
+    else:
+        mode = 'loose'
     # 返回的是符合条件的tuple_list
     arr = headers_turple_array
     arr_len = arr.__len__()
@@ -417,7 +422,11 @@ def select_headers_via_key_from_tuple_list(headers_turple_array,key):
     for i in range(0,arr_len):
         k = arr[i][0]
         v = arr[i][1]
-        if(k.upper() == key.upper()):
+        if(mode == 'strict'):
+            cond = (k == key)
+        else:
+            cond = (k.upper() == key.upper())
+        if(cond):
             temp = (k,v)
             rslt.append(temp)
     return(rslt)
@@ -484,40 +493,62 @@ def get_content_type_from_resp(resp):
         return(None)
 
 
-def get_rel_redirect_url_from_resp(resp):
+def get_redirect_url_from_resp(resp,**kwargs):
     if(resp.status == 302):
-        loc = resp.getheader('Location')
-        if(loc):
-            return(loc)
-        loc = resp.getheader('location')
-        if(loc):
-            return(loc)
+        resp_headers = resp.getheaders()
+        loc =  select_headers_via_key_from_tuple_list(resp_headers,'Location')[0]
+        return(loc)            
     else:
         return(None)
 
 
 
 def get_abs_redirect_url_from_resp(resp,url):
-    resp_head_dict = get_resp_headers_vl_dict_from_resp(resp)
-    base_url = url_tool.get_base_url(url)
-    if('Location' in resp_head_dict):
-        loc = resp_head_dict['Location'][0]
-        regex = re.compile('^/')
-        m = regex.search(loc)
-        if(m):
-            return(''.join((base_url,loc)))
-        else:
-            return(loc)
-    elif('location' in resp_head_dict):
-        loc = resp_head_dict['location'][0]
-        regex = re.compile('^/')
-        m = regex.search(loc)
-        if(m):
-            return(''.join((base_url,loc)))
-        else:
-            return(loc)
-    else:
+    #@@@@
+    loc = get_redirect_url_from_resp(resp)
+    if(loc==None):
         return(None)
+    else:
+        abs_url = url_tool.get_abs_url(loc,base=url)
+    return(abs_url)  
+
+def get_redirect_url(ic,**kwargs):
+    '''
+    '''
+    if('mode' in kwargs):
+        mode = kwargs['mode']
+    else:
+        mode = 'abs'
+    if('url' in kwargs):
+        url = kwargs['url']
+    else:
+        pass
+    t = str(type(ic))
+    if(t = "<class 'http.client.HTTPResponse'>"):
+        #resp
+        if(mode = 'abs'):
+            return(get_abs_redirect_url_from_resp(ic,url))
+        else:
+            return(get_redirect_url_from_resp(ic))
+    elif(t = "<class 'dict'>"):
+        #info_container
+        if(mode = 'abs'):
+            return(get_abs_redirect_url_from_resp(ic['resp'],ic['url']))
+        else:
+            return(get_redirect_url_from_resp(ic['resp']))
+    else:
+        #resp_head
+        rel = select_headers_via_key_from_tuple_list(ic,'Location')[0]
+        if(mode = 'abs'):
+            origin = url_tool.get_origin(url)
+            if(rel[0] == '/'):
+                abs_url = origin + rel
+            else:
+                abs_url = rel
+            return(abs_url)
+        else:
+            return(rel)
+#@@@
 
 
 #-----------------------------------implement cache
