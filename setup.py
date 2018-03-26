@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
       name="navegador5",
-      version = "0.38",
+      version = "0.39",
       description="tools for http request",
       author="dapeli",
       url="https://github.com/ihgazni2/navegador5",

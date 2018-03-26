@@ -948,10 +948,69 @@ def build_query_str(inputs_tupleList,**kwargs):
         k = inputs[i][0]
         v = inputs[i][1]
         #此处没有问题，发送form时，需要urlencode
-        s = nvurl.urlencode({k:v})
+        s = url_tool.urlencode({k:v})
         query_str = query_str + '&' + s
     query_str = query_str.lstrip('&')
     return(query_str)
+
+
+# 1.       在服务器端获取参数的时候，HttpServletRequest.getParameter(String name)方法的返回结果根据如下情况区分：
+
+# 1.1   请求消息中不包含这个参数，返回null。
+
+# 1.2   请求消息中包含这个参数，但是没有值。例如param1=&param2=123中的param1。这种情况下返回空字符串””。
+
+# 1.3   请求消息中包含多个命名相同的参数。例如param1=1&param1=2中的param1。这种情况下，返回第一个参数的值。例如上面的1。如果使用HttpServletRequest.getParameterValues(String name)，则返回一个包含所有命名相同的值的Sring数组。
+
+# 2.       <input type="submit" name=" " value=" ">。
+
+# 一个页面中可以有多个submit元素，点击某个submit按钮的时候，浏览器会将form的数据封转后发送给服务器，其中包括一对当前点击的submit信息的数据，为当前点击submit按钮的name和value。其他不点击的submit按钮不传递name和value值。
+
+# 所以可以通过如下语句判断点击了那个submit按钮。
+
+# if(req.getParameter("submit按钮的name属性") != null && req.getParameter("submit按钮的name属性").equals("submit按钮的value属性"))
+
+       # {
+
+           # 执行语句
+
+    # }
+# 如果某个submit按钮没有name属性。点击这个按钮的时候，浏览器也会将form的数据封转后发送给服务器，但是不包含submit按钮本身的name和value信息。所以服务器端不能判断是点击了哪个按钮。
+# 3.       <input type="button" name=" " value=" ">
+# 点击一个submit按钮的时候，浏览器会自动提交数据到服务器，但是点击一个Button的时候，浏览器只是单纯的执行这个Button的onclick事件。如果没有onclick事件，就什么也不做。可以在onclick事件中通过JavaScript代码提交表单。
+# 例如：
+# function button1_click()
+# {
+# document.form1.action = “check.jsp”;
+# document.form1.submit();
+# }
+# 点击button按钮不传递button的name和value值。
+# 4.       各种input的传递name和value的情况：
+# 前提是，只要没有name属性，就不传递。
+# text和textarea不管是否为空，都将传递到服务器，为空时传递的value值为空字符串。
+# checkbox和radio的状况是，只有被选中的才会传递，不选择的不传递。如果选中了没有value的checkbox和radio，传递的value值默认为”on”。
+# hidden不管如何，都会被传递给服务器。
+
+
+
+#select:
+
+def dropDownList(ele):
+    name = ele.attrib['name']
+    value = ''
+    d = {}
+    options = nvbody.get_eles_via_xpath(ele,'./option')
+    print('<select> name: '+name)
+    for opt in options:
+        text = opt.text
+        v = opt.attrib['value']
+        print('    '+ str(text)+':'+str(v))
+        d[text] = v
+    rslt = {}
+    rslt['select_name'] = name
+    rslt['select_value'] = value
+    rslt['opts'] = d
+    return(rslt)
 
 
 
