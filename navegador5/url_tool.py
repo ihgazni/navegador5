@@ -271,12 +271,19 @@ def urldecode(encoded_str,**kwargs):
     eles = encoded_str.split(sp)
     eles_len = eles.__len__()
     r1 = {}
+    ####improvement for value such as 'SourceUrl=//xyz/query.aspx?ID=000001'
+    regex = re.compile('(.*?)=(.*)')
     for i in range(0,eles_len):
         kv = eles[i]
         if("=" in kv):
-            kv_arr = kv.split("=")
-            k=kv_arr[0]
-            v=kv_arr[1]
+            ####improvement for value such as 'SourceUrl=//xyz/query.aspx?ID=000001'
+            m = regex.search(kv)
+            #kv_arr = kv.split("=")
+            #k=kv_arr[0]
+            #v=kv_arr[1]
+            k = m.group(1)
+            v = m.group(2)
+            ###################
             if(quote_plus):
                 k=urllib.parse.unquote_plus(k)
                 v=urllib.parse.unquote_plus(v)
