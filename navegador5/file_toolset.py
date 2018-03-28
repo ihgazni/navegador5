@@ -2,6 +2,8 @@ from navegador5 import shell_cmd
 import os
 import json
 import chardet
+import csv
+
 
 def convert_code(to_codec="UTF8",**kwargs):
     fd = open(kwargs['fn'],"rb+")
@@ -35,6 +37,34 @@ def read_json(**kwargs):
     rslt = read_file_content(**kwargs)
     js = json.loads(rslt)
     return(js)
+
+####
+def write2csv(**kwargs):
+    if('op' in kwargs):
+        op = kwargs['op']
+    else:
+        op = 'w+'
+    csvarr = kwargs['csvarr']
+    fd = open(kwargs['fn'],op)
+    writer = csv.writer(fd)
+    writer.writerows(csvarr)
+    fd.close()
+
+
+def readcsv(**kwargs):
+    if('op' in kwargs):
+        op = kwargs['op']
+    else:
+        op = 'r+'
+    fd = open(kwargs['fn'],op)
+    reader = csv.reader(fd)
+    csvarr = []
+    for row in reader:
+        csvarr.append(row)
+    fd.close()
+    return(csvarr)
+
+####
 
 
 def prepend_to_file(prepend,**kwargs):
