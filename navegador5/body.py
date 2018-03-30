@@ -784,8 +784,16 @@ def handle_req_body_via_content_type(content_type_head_str,req_body):
     else:
         return(req_body)
 
-#---------------------
+#--------------------
+#  Transfer-Encoding  --decode-chunks-> 
+#  Content-Encoding --decompress--> 
+#  Content-Type --decode_resp_body_bytes-->
+#  Content
+
 def decode_transfer_encoding_chunked_via_resp(resp):
+    '''
+        chunks 会被python 自动解压的
+    '''
     pass
 
 def encode_chunks(chunks,**kwargs):

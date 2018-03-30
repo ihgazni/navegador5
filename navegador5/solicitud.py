@@ -135,6 +135,33 @@ def keepalive_init(base_url,**kwargs):
     return((info_container,records_container))
 
 
+####
+def dup_req(ic,**kwargs):
+    info_container = new_info_container()
+    info_container['auto_update_cookie'] = ic['auto_update_cookie']
+    info_container['req_body'] = ic['req_body']
+    info_container['base_url'] = ic['base_url'] 
+    info_container['from_url'] = ic['from_url']   
+    info_container['method'] = ic['method']
+    info_container['auto_redirected'] = ic['auto_redirected']
+    info_container['url'] = ic['url']
+    info_container['req_head'] = ic['req_head']
+    info_container['referer'] = ic['referer']
+    info_container['origin'] = ic['origin']
+    return(info_container)
+
+
+
+
+
+
+
+
+
+
+
+
+####
 
 
 def nonkeepalive_init(base_url,**kwargs):
