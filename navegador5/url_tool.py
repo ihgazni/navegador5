@@ -613,13 +613,12 @@ def get_abs_url(rel_url,**kwargs):
             rel_url = six_set(rel_url,path = path[3:])
             abs_url = pp + '/' + rel_url
         else:
-            tmp = os.path.split(base)
             # 对于没以'/'结尾的情况
-            cond = (tmp[1] == '')
+            cond = (base[-1] == '/')
             if(cond):
-                abs_url = base + '/' + rel_url
+                abs_url = base  + rel_url
             else:
-                abs_url = os.path.split(base)[0] + '/' + rel_url
+                abs_url = base + '/' + rel_url
         return(abs_url)
     else:
         return(rel) 
