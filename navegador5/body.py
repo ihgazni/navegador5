@@ -16,6 +16,8 @@ import os
 #for show 
 from xdict.cmdline import Hentry
 import html
+import chardet
+import elist.elist as elel
 
 
 ##
@@ -786,8 +788,50 @@ def handle_req_body_via_content_type(content_type_head_str,req_body):
 def decode_transfer_encoding_chunked_via_resp(resp):
     pass
 
-def encode_data_bytes_to_transfer_encoding_chunked(data_bytes,slice_sec_list,trailer):
-    pass
+def encode_chunks(chunks,**kwargs):
+    '''
+    '''
+    #t = detect_chunks(chunks)
+    if('tailer' in kwargs):
+        tailer = kwargs['tailer']
+    else:
+        tailer = b''
+    if('codec' in kwargs):
+        codec = kwargs['codec']
+    else:
+        codec = 'utf-8'
+    def cond_func(ele,codec):
+        return(bytes(ele,codec))
+    bchunks = elel.array_map(chunks,cond_func,codec)
+    rslt = encode_data_bytes_to_transfer_encoding_chunked(bytechunks,**kwargs)
+    return(rslt)
+
+
+def detect_chunks(chunks):
+    t = type(chunks[0])
+    if(t == type('')):
+        return('str')
+    else:
+        return('bytes')
+
+def encode_data_bytes_to_transfer_encoding_chunked(bytechunks,**kwargs):
+    '''
+    '''
+    if('tailer' in kwargs):
+        tailer = kwargs['tailer']
+    else:
+        tailer = b''
+    length = bytechunks.__len__()
+    encoded = b''
+    for i in range(0,length):
+        chunk = bytechunks[i]
+        L = chunk.__len__()
+        chunk = bytes(str(L),'utf-8') + b'\r\n' + chunk + '\r\n'
+        encoded = encoded + chunk
+    encoded = encoded + b'0' + '\r\n' + tailer
+    return(encoded)
+
+    
 
 #-----------------------
 def decode_resp_body_bytes(info_container):
