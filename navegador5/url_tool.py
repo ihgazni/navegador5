@@ -1,8 +1,8 @@
 import urllib.parse
 import os
 import re
-
-
+from xdict import utils
+import elist.elist as elel
 
 
 def get_origin(url):
@@ -17,6 +17,91 @@ def get_base_url(url):
     scheme = temp.scheme
     base_url = ''.join((scheme,'://',netloc))
     return(base_url)
+
+
+def trim_after_netloc(url):
+    temp = urllib.parse.urlparse(url)
+    netloc = temp.netloc
+    scheme = temp.scheme
+    base_url = ''.join((scheme,'://',netloc))
+    return(base_url)
+
+def get_path_arr(url):
+    '''
+        url = "http://baidu.com/a/b/c/d.html;p1;p2?q=a#frag"
+        >>> url = "http://baidu.com/a/b/c/d.html;p1;p2?q=a#frag"
+        >>>
+        >>> parr = get_path_arr(url)
+        >>> pobj(parr)
+        [
+         'http://baidu.com/a',
+         'http://baidu.com/a/b',
+         'http://baidu.com/a/b/c',
+         'http://baidu.com/a/b/c/d.html'
+        ]
+
+    '''
+    temp = urllib.parse.urlparse(url)
+    netloc = temp.netloc
+    scheme = temp.scheme
+    path = temp.path
+    parent = ''.join((scheme,'://',netloc))
+    path = utils.str_lstrip(path,'/',1)
+    paths = path.split('/')
+    rslt = []
+    length = paths.__len__()
+    for i in range(0,length):
+        fp = parent + '/' + paths[i]
+        rslt.append(fp)
+        parent = fp
+    return(rslt)
+    
+    
+
+def trim_after_parent(url):
+    '''
+          url = "http://baidu.com/a/b/c/d.html;p1;p2?q=a#frag"
+    '''
+    rslt = get_path_arr(url)[-2]
+    return(rslt)
+
+
+def trim_after_ancestor(url,which):
+    rslt = get_path_arr(url)[which]
+    return(rslt)
+
+
+
+def trim_after_path(url):
+    temp = urllib.parse.urlparse(url)
+    netloc = temp.netloc
+    scheme = temp.scheme
+    path = temp.path
+    path_url = ''.join((scheme,'://',netloc,'/',path))
+    return(path_url)
+
+def trim_after_params(url):
+    temp = urllib.parse.urlparse(url)
+    netloc = temp.netloc
+    scheme = temp.scheme
+    path = temp.path
+    params = temp.params
+    params_url = ''.join((scheme,'://',netloc,'/',path,';',params))
+    return(params_url)
+
+def trim_after_query(url):
+    temp = urllib.parse.urlparse(url)
+    netloc = temp.netloc
+    scheme = temp.scheme
+    path = temp.path
+    params = temp.params
+    query = temp.query
+    query_url = ''.join((scheme,'://',netloc,'/',path,';',params,'?',query))
+    return(query_url)
+
+
+
+
 
 def url_to_dirpath(url):
     netloc = urllib.parse.urlparse(url).netloc
@@ -613,6 +698,7 @@ def get_abs_url(rel_url,**kwargs):
             rel_url = six_set(rel_url,path = path[3:])
             abs_url = pp + '/' + rel_url
         else:
+            # 这种情况
             # 对于没以'/'结尾的情况
             cond = (base[-1] == '/')
             if(cond):
