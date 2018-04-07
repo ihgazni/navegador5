@@ -77,7 +77,7 @@ def trim_after_path(url):
     netloc = temp.netloc
     scheme = temp.scheme
     path = temp.path
-    path_url = ''.join((scheme,'://',netloc,'/',path))
+    path_url = ''.join((scheme,'://',netloc,path))
     return(path_url)
 
 def trim_after_params(url):
@@ -86,7 +86,7 @@ def trim_after_params(url):
     scheme = temp.scheme
     path = temp.path
     params = temp.params
-    params_url = ''.join((scheme,'://',netloc,'/',path,';',params))
+    params_url = ''.join((scheme,'://',netloc,path,';',params))
     return(params_url)
 
 def trim_after_query(url):
@@ -96,7 +96,7 @@ def trim_after_query(url):
     path = temp.path
     params = temp.params
     query = temp.query
-    query_url = ''.join((scheme,'://',netloc,'/',path,';',params,'?',query))
+    query_url = ''.join((scheme,'://',netloc,path,';',params,'?',query))
     return(query_url)
 
 
