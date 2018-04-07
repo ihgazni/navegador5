@@ -3,7 +3,8 @@ import os
 import json
 import chardet
 import csv
-
+from xdict import utils
+import re
 
 def convert_code(to_codec="UTF8",**kwargs):
     fd = open(kwargs['fn'],"rb+")
@@ -37,6 +38,39 @@ def read_json(**kwargs):
     rslt = read_file_content(**kwargs)
     js = json.loads(rslt)
     return(js)
+
+def file_replace_string(src,dst,**kwargs):
+    if('rop' in kwargs):
+        rop = kwargs['rop']
+    else:
+        rop = 'r+'
+    if('wop' in kwargs):
+        wop = kwargs['wop']
+    else:
+        wop = 'w+'
+    kwargs['op'] = kwargs['rop']
+    rslt = read_file_content(**kwargs)
+    if('count' in kwargs):
+        count = kwargs['count']
+    else:
+        count = 0
+    if('flags' in kwargs):
+        flags = kwargs['flags']
+    else:
+        flags = 0
+    if(xdict.utils.is_regex(src)):
+        #re.sub(pattern, repl, string, count=0, flags=0)
+        rslt = re.sub(src,dst,rslt,count,flags) 
+    else:
+        rslt = rslt.replace(src,dst)
+    if('inplace' in kwargs):
+        inplace = True
+    else:
+        inplace = False
+        ncp = kwargs['copyto']
+    kwargs['op'] = kwargs['wop']
+    write_to_file(**kwargs)
+
 
 ####
 def write2csv(**kwargs):
@@ -96,3 +130,5 @@ def walkall_files(dirpath=os.getcwd()):
             path = os.path.join(root,fn)
             fps.append(path)
     return(fps)
+
+#def file_recursive_rename
