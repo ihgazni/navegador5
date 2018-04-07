@@ -687,14 +687,17 @@ def get_abs_url(rel_url,**kwargs):
         base = "http://localhost:8080/mysite/xxx/login.jsp"
         
     '''
-    base = kwargs['base']
-    origin = get_origin(base)
+    #base = kwargs['base']
+    #origin = get_origin(base)
     ####
     rel = urllib.parse.urlparse(rel_url)
     scheme = rel.scheme
     netloc = rel.netloc
     path = rel.path
+    ####
     if(scheme == ''):
+        base = kwargs['base']
+        origin = get_origin(base)
         if(path == ''):
             abs_url = base
         elif(path[0] == '/'):
@@ -720,3 +723,16 @@ def get_abs_url(rel_url,**kwargs):
         return(rel) 
 
 
+
+
+#https://onlineservices.immigration.govt.nz/PaymentGateway/OnLinePayment.aspx?ProductId=2&SourceUrl=%2f%2fonlineservices.immigration.govt.nz%2fWorkingHoliday%2fApplication%2fSubmitConfirmation.aspx%3fApplicationId%3d2057863&Token=LctQ9Y5g+5WanrJmA6S2WQ9VQMsvtIpCztSVdx4wiJkIiGx7DUL%2f2wipo5426qG0YTDq+nd8AwM%3d
+# https://onlineservices.immigration.govt.nz/PaymentGateway/OnLinePayment.aspx?ProductId=2&SourceUrl=//onlineservices.immigration.govt.nz/WorkingHoliday/Application/SubmitConfirmation.aspx?ApplicationId=2057863&Token=LctQ9Y5g%205WanrJmA6S2WQ9VQMsvtIpCztSVdx4wiJkIiGx7DUL/2wipo5426qG0YTDq%20nd8AwM=
+# 如果query里有url 先分离后quote
+# uqurl = urllib.parse.unquote(url)
+# head = nvurl.trim_after_path(uqurl)
+# query = urllib.parse.urlparse(uqurl).query
+# d = nvurl.urldecode(query)
+# d['ProductId'] = urllib.parse.quote_plus(d['ProductId'])
+# d['SourceUrl'] = urllib.parse.quote_plus(d['SourceUrl'])
+# d['Token'] = urllib.parse.quote_plus(d['Token'])
+# query_url = 'ProductId='+d['ProductId']+'&'+ 'SourceUrl=' + d['SourceUrl'] +'&' +'Token=' + d['Token']
