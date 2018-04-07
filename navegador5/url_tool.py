@@ -699,7 +699,7 @@ def get_abs_url(rel_url,**kwargs):
         base = kwargs['base']
         origin = get_origin(base)
         if(path == ''):
-            abs_url = base
+            abs_url = os.path.split(base)[0] + '/' + rel_url 
         elif(path[0] == '/'):
             abs_url = origin + rel_url
         elif(path[:2] == './'):
