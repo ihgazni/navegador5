@@ -720,7 +720,7 @@ def get_abs_url(rel_url,**kwargs):
                 abs_url = base + '/' + rel_url
         return(abs_url)
     else:
-        return(rel) 
+        return(rel_url) 
 
 
 
