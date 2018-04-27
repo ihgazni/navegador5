@@ -10,5 +10,6 @@ toolsets for web crawler
 6. amf0,amf3 support <br>
 7. rfc6265 partly support moved to [kukibanshee](https://github.com/ihgazni2/kukibanshee) <br>
 8. nettime decode support moved to [nozdorm](https://github.com/ihgazni2/kukibanshee)<br>
+9. can simulate jsonp behavior, need to work  with other libs ,such as js2py.
 ----------------------------------------------------------------------------------------------
 
