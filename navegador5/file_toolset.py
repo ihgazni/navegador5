@@ -132,3 +132,18 @@ def walkall_files(dirpath=os.getcwd()):
     return(fps)
 
 #def file_recursive_rename
+
+
+
+#替换父目录的名字，祖父以上层级目录不变
+def new_leaf_path(p,suffix):
+    '''
+    '''
+    basename = os.path.basename(p)
+    olp = os.path.dirname(p)
+    nlp = os.path.basename(olp)+'_'+suffix
+    pp = os.path.dirname(olp)
+    np = pp+'/'+nlp
+    os.makedirs(np)
+    np = np +'/'+basename
+    return(np)

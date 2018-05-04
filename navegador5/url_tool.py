@@ -399,6 +399,7 @@ def urldecode_half_ordered(encoded_str,**kwargs):
     eles = encoded_str.split(sp)
     eles_len = eles.__len__()
     r1 = []
+    regex = re.compile('(.*?)=(.*)')
     for i in range(0,eles_len):
         kv = eles[i]
         if("=" in kv):
@@ -442,6 +443,7 @@ def urldecode_ordered(encoded_str,**kwargs):
     eles = encoded_str.split(sp)
     eles_len = eles.__len__()
     r1 = []
+    regex = re.compile('(.*?)=(.*)')
     for i in range(0,eles_len):
         kv = eles[i]
         if("=" in kv):
