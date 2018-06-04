@@ -621,4 +621,62 @@ def handle_cache_control(cache_control_text):
 # 4.如果 referer-policy 的值为 always：不改变http header 中的 referer 的值，注意：这种情况下，如果当前页面使用了 https 协议，而要加载的资源使用的是 http 协议，加载资源的请求头中也会携带 referer。
 
 #https://w3c.github.io/webappsec-referrer-policy/
-#https://tools.ietf.org/html/rfc7231#section-5.5.2 
+#https://tools.ietf.org/html/rfc7231#section-5.5.2
+
+
+
+#
+
+import tlist.tlist as tltl
+
+
+def get_header(ic,head_name,**kwargs):
+    if(tltl.is_tlist(ic)):
+        resp_head = ic
+    else:
+        resp_head = ic['resp_head'] 
+    l = tltl.get_value(resp_head,head_name)
+    if(l.__len__() == 1):
+        return(l[0])
+    else:
+        return(l)
+
+
+
+def get_etag(ic,**kwargs):
+    return(get_header(ic,'ETag',**kwargs))
+
+
+def get_last_modified(ic,**kwargs):
+    return(get_header(ic,'Last-Modified',**kwargs))
+
+
+def get_expires(ic,**kwargs):
+    return(get_header(ic,'Expires',**kwargs))
+
+def get_date(ic,**kwargs):
+    return(get_header(ic,'Date',**kwargs))
+
+def get_cahce_control(ic,**kwargs):
+    return(get_header(ic,'Cache-Control',**kwargs))
+
+def get_server(ic,**kwargs):
+    return(get_header(ic,'Server',**kwargs))
+
+def get_set_cookie(ic,**kwargs):
+    return(get_header(ic,'Set-Cookie',**kwargs))
+
+def get_x_powered_by(ic,**kwargs):
+    return(get_header(ic,'X-Powered-By',**kwargs))
+
+def get_connection(ic,**kwargs):
+    return(get_header(ic,'Connection',**kwargs))
+
+
+
+
+
+
+
+
+
