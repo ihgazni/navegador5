@@ -738,3 +738,17 @@ def get_abs_url(rel_url,**kwargs):
 # d['SourceUrl'] = urllib.parse.quote_plus(d['SourceUrl'])
 # d['Token'] = urllib.parse.quote_plus(d['Token'])
 # query_url = 'ProductId='+d['ProductId']+'&'+ 'SourceUrl=' + d['SourceUrl'] +'&' +'Token=' + d['Token']
+
+
+
+def quote_plus_chinese_url(href):
+    href = urllib.parse.quote_plus(href,":/?=;#")
+    return(href)
+
+
+def quote_chinese_url(href):
+    href = urllib.parse.quote(href,":/?=;#")
+    return(href)
+
+
+

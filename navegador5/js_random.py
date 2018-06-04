@@ -156,3 +156,51 @@ def crypt_JS_md6_decode(encrypted_Passwd):
         clear_Text_Passwd = ''.join((clear_Text_Passwd,char))
     return(clear_Text_Passwd)
 
+#############################################
+#UA random
+
+def ums1():
+    a = int(nvjq.jQuery_unix_now())
+    b = random.randrange(200,1500)
+    s1 = xjs.toString(a,16) + xjs.toString(b,16)
+    return(s1)
+
+def umsig_internal(a,b,h):
+    c = 0
+    d = 0
+    for c in range(0,b.__len__()):
+        d = d | (h[c] << (8*c))
+    return(a^d)
+
+def umsig(ua):
+    k = 0
+    h = []
+    for i in range(0,ua.__len__()):
+        g = eses.charCodeAt(ua,i)
+        h = xjs.unshift(h,g&255)
+        if(h.__len__()>=4):
+            k = umsig1(k,h,h)
+            h = []
+        else:
+            pass
+    if(h.__len__()>0):
+        k = umsig_internal(k,h,h)
+    else:
+        pass
+    return(xjs.toString(k,16))
+
+def get_um_cookie(ua):
+    '''
+        UM_distinctid=163beafb1ae4c-0ab6ca85f87c84-4c312b7b-100200-163beafb1af26
+    '''
+    screen_height = 768
+    screen_width = 1366
+    c = xjs.toString(screen_height*screen_width,16)
+    rslt = ums1() + "-" 
+    rslt = rslt + xjs.toString(int(str(random.random()).replace("0.","")),16)
+    rslt = rslt + "-" + umsig(ua) + "-" + c + "-" + ums1()
+    return(rslt)
+
+
+
+############################################
