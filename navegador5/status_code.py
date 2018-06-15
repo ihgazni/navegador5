@@ -183,10 +183,10 @@ def reason2code(reason,mode='loose'):
         reason = reason.lower()
         for key in REASONS_MD:
             k = key.replace(" ","")
-            k = key.lower()
-            cond1 = (key == reason)
-            cond2 = (key in reason)
-            cond3 = (reason in key)
+            k = k.lower()
+            cond1 = (k == reason)
+            cond2 = (k in reason)
+            cond3 = (reason in k)
             lngth = min(k.__len__(),reason.__len__())
             mdis = lngth // 3
             dis = edis.distance(reason,k)
