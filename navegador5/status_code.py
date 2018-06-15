@@ -201,7 +201,7 @@ def reason2code(reason,mode='loose'):
             else:
                 pass
         if(rslt.__len__()==1):
-            return(rslt[0])
+            return(rslt[0][1])
         else:
             return(rslt)
                  
