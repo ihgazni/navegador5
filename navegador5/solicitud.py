@@ -11,8 +11,64 @@ from navegador5 import head
 from navegador5 import body
 from navegador5.cookie import cookie
 from navegador5 import time_utils
+from navegador5 import status_code
 import platform
 import socket
+
+###########################
+ #requests
+ # '_content',
+ # '_content_consumed',
+ # '_next',
+ # 'apparent_encoding',
+ # 'close',
+ # 'connection',
+ # 'content',
+ # 'cookies',
+ # 'elapsed',
+ # 'encoding',
+ # 'headers',
+ # 'history',
+ # 'is_permanent_redirect',
+ # 'is_redirect',
+ # 'iter_content',
+ # 'iter_lines',
+ # 'json',
+ # 'links',
+ # 'next',
+ # 'ok',
+ # 'raise_for_status',
+ # 'raw',
+ # 'reason',
+ # 'request',
+ # 'status_code',
+ # 'text',
+ # 'url'
+#######################
+
+
+##############
+# 数据结构设计
+# conn        keepalive 模式下有用
+# method
+# url
+# origin      域
+# referer     上一条访问的url
+# req_head    req.head
+# req_body    req.body
+# resp_head   res.head
+# resp_body   res.body
+# resp_code   res.code
+########################
+# auto_keepalive     
+#     --------根据返回的Connection 头部自动处理
+# auto_redirect      
+#     --------Location 头部    
+# auto_update_cookie
+#     --------Cookie 的三个来源
+#####################
+
+
 
 #############
 def shutdown(info_container,how=socket.SHUT_WR):
@@ -105,7 +161,9 @@ def new_info_container():
         'shutdown':0,
         'inuse':0,
         'reopened':0,
-        'reopen_reason':''
+        'reopen_reason':'',
+        'reason':'',
+        'code'
     }
     return(info_template)
 
@@ -915,6 +973,9 @@ def walkon(info_container,**kwargs):
     info_container['referer'] = url
     info_container['origin'] = url_tool.get_origin(url)
     ###################
+    info_container['code'] = resp.code
+    info_container['reason'] = status_code.REASONS[resp.code]
+    ####################
     if(step<2):
         pass
     else:
