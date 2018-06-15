@@ -162,8 +162,8 @@ def new_info_container():
         'inuse':0,
         'reopened':0,
         'reopen_reason':'',
-        'reason':'',
-        'code'
+        'reason':None,
+        'code':None
     }
     return(info_template)
 
