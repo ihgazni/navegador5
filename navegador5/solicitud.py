@@ -981,7 +981,7 @@ def walkon(info_container,**kwargs):
     else:
         pass
     info_container['resp_body_text'] = resp_body_bytes.decode(info_container['resp_body_codec'])
-    info_container['resp_body_query'] = pq(info_conatiner['resp_body_text']) 
+    info_container['resp_body_query'] = pq(info_container['resp_body_text']) 
     info_container['resp'] = resp
     info_container['from_url'] = url
     ###################
