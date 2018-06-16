@@ -980,7 +980,7 @@ def get_form_url(etree_form,url):
         return(html.unescape(form_url))
 
 
-def get_inputs_from_form(form,kwargs):
+def get_inputs_from_form(form,**kwargs):
     eles = get_eles_via_xpath(form,'//input')
     eles_len = eles.__len__()    
     query_tl = []

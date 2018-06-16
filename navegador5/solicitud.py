@@ -313,6 +313,7 @@ def stepping_req(conn,method,url_path,**kwargs):
     else:
         req_body = None
     if(method == "GET"):
+        #GET 请求中应该处理一些通用动作，比如删除Content-Type
         if(type(req_body)==type({})):
             req_body = url_tool.urlencode(req_body)
             url_path = ''.join((url_path,"?",req_body))
