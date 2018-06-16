@@ -1017,8 +1017,8 @@ def get_inputs_from_form(form):
 def get_form_inputs(ic,**kwargs):
     '''
     '''
-    root = nvbody.get_etree_root(ic)
-    forms = nvbody.get_eles_via_xpath(root,'//form')
+    root = get_etree_root(ic)
+    forms = get_eles_via_xpath(root,'//form')
     if('which' in kwargs):
         which = kwargs['which']
         form = forms[which]
