@@ -15,6 +15,8 @@ from navegador5 import status_code
 import platform
 import socket
 
+from pyquery import PyQuery as pq
+
 ###########################
  #requests
  # '_content',
@@ -146,7 +148,10 @@ def new_info_container():
     info_template = {
         'resp':None,
         'resp_head': [], 
-        'resp_body_bytes': None, 
+        'resp_body_bytes': None,
+        'resp_body_text':None,
+        'resp_body_query':None,
+        'resp_body_codec':None, 
         'req_head': None, 
         'req_body': None, 
         'method':None,
@@ -967,6 +972,16 @@ def walkon(info_container,**kwargs):
     info_container['conn'] = conn
     info_container['resp_head'] = resp_head
     info_container['resp_body_bytes'] = resp_body_bytes
+    try:
+        info_container['resp_body_codec'] = get_content_type_from_resp(resp)['charset']
+    except:
+        print("no charset in resp_head")
+        ####add code to get charset from http-equiv
+        info_container['resp_body_codec'] = "utf-8"
+    else:
+        pass
+    info_conatiner['resp_body_text'] = resp_body_bytes.decode(info_container['resp_body_codec'])
+    info_container['resp_body_query'] = pq(info_conatiner['resp_body_text']) 
     info_container['resp'] = resp
     info_container['from_url'] = url
     ###################

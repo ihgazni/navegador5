@@ -18,7 +18,8 @@ from xdict.cmdline import Hentry
 import html
 import chardet
 import elist.elist as elel
-
+#
+from pyquery import PyQuery as pq
 
 ##
 ## API NAME  IS    I-M-P-O-R-T-A-N-T !!! 
@@ -91,6 +92,52 @@ def show_resp_body(ic,tag='html',**kwargs):
         else:
             return(html_entry)
 
+def search_for_text(ic,s):
+    rslt = []
+    l = show_resp_body(ic,only_print=False)
+    for k in l:
+        v = l[k]
+        if(isinstance(s,str)):
+            if(isinstance(v['result'],str)):
+                cond = (s in v['result'])
+            else:
+                cond = False
+        else:
+            cond = (s == v['result'])
+        if(cond):
+            rslt.append(v)
+        else:
+            pass
+    return(rslt)
+
+#########################
+
+def etree_inner_html(ele,codec="utf8"):
+    s = etree.tostring(ele).decode(codec)
+    s = html.unescape(s)
+    print(s)
+    return(s)
+
+def etree_outter_html(ele,codec="utf8"):
+    s = etree.tostring(ele.getparent()).decode(codec)
+    s = html.unescape(s)
+    print(s)
+    return(s)
+
+
+
+
+def query_for_inner_html(ic,sels):
+    h = nvbody.get_html_text(ic)
+    d = pq(h)
+    rslt = d(sels)
+    rslt = elel.array_map(rslt,etree_inner_html)
+    return(rslt)
+
+
+
+
+########################
 def get_etree_root(info_container,**kwargs):
     if('coding' in kwargs):
         coding = kwargs['coding']
