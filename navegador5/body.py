@@ -980,8 +980,8 @@ def get_form_url(etree_form,url):
         return(html.unescape(form_url))
 
 
-def get_inputs_from_form(form):
-    eles = nvbody.get_eles_via_xpath(form,'//input')
+def get_inputs_from_form(form,kwargs):
+    eles = get_eles_via_xpath(form,'//input')
     eles_len = eles.__len__()    
     query_tl = []
     for i in range(0,eles_len):
@@ -1028,13 +1028,13 @@ def get_form_inputs(ic,**kwargs):
         rslt = []
         for i in range(0,some.__len__()):
             form = forms[some[i]]
-            rslt.append(get_inputs_from_form(form))
+            rslt.append(get_inputs_from_form(form,**kwargs))
         return(rslt)
     else:
         rslt = []
         for i in range(0,forms.__len__()):
             form = forms[i]
-            rslt.append(get_inputs_from_form(form))
+            rslt.append(get_inputs_from_form(form,**kwargs))
         return(rslt)
 
 
