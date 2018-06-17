@@ -977,6 +977,9 @@ def walkon(info_container,**kwargs):
     info_container['conn'] = conn
     info_container['resp_head'] = resp_head
     info_container['resp_body_bytes'] = resp_body_bytes
+    ###########################################################################################
+    print(info_container['resp_body_codec'])
+    ####
     try:
         info_container['resp_body_codec'] = head.get_content_type_from_resp(resp)['charset']
     except:
@@ -990,7 +993,7 @@ def walkon(info_container,**kwargs):
         pass
     ####
     print(info_container['resp_body_codec'])
-    ####
+    ############################################################################################
     info_container['resp_body_text'] = resp_body_bytes.decode(info_container['resp_body_codec'])
     try:
         info_container['resp_body_query'] = pq(info_container['resp_body_text']) 
