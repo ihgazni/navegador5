@@ -995,7 +995,8 @@ def walkon(info_container,**kwargs):
             else:
                 info_container['resp_body_codec'] = "utf-8" 
     ####
-    #print(info_container['resp_body_codec'])
+    print("----------------")
+    print(info_container['resp_body_codec'])
     ############################################################################################
     info_container['resp_body_text'] = resp_body_bytes.decode(info_container['resp_body_codec'])
     try:
