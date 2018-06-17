@@ -984,6 +984,7 @@ def walkon(info_container,**kwargs):
         pass
     else:
         try:
+            print("<<<============>>>")
             info_container['resp_body_codec'] = head.get_content_type_from_resp(resp)['charset']
         except:
             print("no charset in resp_head")
