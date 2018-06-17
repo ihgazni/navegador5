@@ -982,7 +982,10 @@ def walkon(info_container,**kwargs):
     except:
         print("no charset in resp_head")
         ####add code to get charset from http-equiv
-        info_container['resp_body_codec'] = "utf-8"
+        if('resp_body_codec' in info_container):
+            pass
+        else:
+            info_container['resp_body_codec'] = "utf-8"
     else:
         pass
     info_container['resp_body_text'] = resp_body_bytes.decode(info_container['resp_body_codec'])
