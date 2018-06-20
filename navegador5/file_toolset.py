@@ -85,12 +85,21 @@ def write2csv(**kwargs):
     fd.close()
 
 
+def detect_file(fn):
+    fd = open(fn,'rb+')
+    byts = fd.read()
+    fd.close()
+    encd = chardet.detect(byts)['encoding']
+    return(encd)
+        
+
 def readcsv(**kwargs):
     if('op' in kwargs):
         op = kwargs['op']
     else:
         op = 'r+'
-    fd = open(kwargs['fn'],op)
+    encd = detect_file(kwargs['fn'])
+    fd = open(kwargs['fn'],op,encoding=encd)
     reader = csv.reader(fd)
     csvarr = []
     for row in reader:
