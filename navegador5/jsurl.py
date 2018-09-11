@@ -120,7 +120,7 @@ def decodeURI(es):
     lngth = arr.__len__()
     for i in range(0,lngth):
         e = arr[i]
-        if('%' = e[0]):
+        if('%' == e[0]):
             cond = is_type52(e)
             if(cond):
                 arr[i] =  unquote_ch(e)
@@ -137,7 +137,7 @@ def decodeUTIComponent(es):
     lngth = arr.__len__()
     for i in range(0,lngth):
         e = arr[i]
-        if('%' = e[0]):
+        if('%' == e[0]):
             cond1 = is_type52(e)
             cond2 = is_type51(e)
             cond = (cond1 | cond2)
