@@ -21,6 +21,11 @@ import elist.elist as elel
 #
 from pyquery import PyQuery as pq
 
+#
+import xxurl.xxurl as xuxu
+
+
+
 ##
 ## API NAME  IS    I-M-P-O-R-T-A-N-T !!! 
 ## refer to MDN API NAME
@@ -968,16 +973,40 @@ def decode_src(src):
 
 #form
 
-def get_form_url(etree_form,url):
-    '''
-    '''
-    dirname,basename = os.path.split(url)
-    action_dirname,action_basename = os.path.split(etree_form.attrib['action'])
-    if(action_dirname == '.'):
-        return(dirname+'/'+action_basename)
+#def get_form_url(etree_form,url):
+#    '''
+#    '''
+#    dirname,basename = os.path.split(url)
+#    action_dirname,action_basename = os.path.split(etree_form.attrib['action'])
+#    if(action_dirname == '.'):
+#        return(dirname+'/'+action_basename)
+#    else:
+#        form_url = etree_form.attrib['action']
+#        return(html.unescape(form_url))
+
+def get_url_from_form(form,**kwargs):
+    if('quote_plus' in kwargs):
+        quote_plus=kwargs['quote_plus']
     else:
-        form_url = etree_form.attrib['action']
-        return(html.unescape(form_url))
+        quote_plus=True
+    if('quote' in kwargs):
+        quote=kwargs['quote']
+    else:
+        quote=True
+    rel = form.attrib['action']
+    if(quote_plus):
+        rel = urllib.parse.unquote_plus(rel)
+    elif(quote):
+        rel = urllib.parse.unquote(rel)
+    else:
+        pass
+    base = kwargs['base']
+    url = xuxu.get_abs_url(base,rel)
+    return(url)
+
+
+
+
 
 
 def get_inputs_from_form(form,**kwargs):
@@ -1012,6 +1041,30 @@ def get_inputs_from_form(form,**kwargs):
             pass
     inputs = query_tl
     return(inputs)
+
+
+def get_form_urls(ic,**kwargs):
+    '''
+    '''
+    root = get_etree_root(ic)
+    forms = get_eles_via_xpath(root,'//form')
+    if('which' in kwargs):
+        which = kwargs['which']
+        form = forms[which]
+        return(get_url_from_form(form))
+    elif('some' in kwargs):
+        some = kwargs['some']
+        rslt = []
+        for i in range(0,some.__len__()):
+            form = forms[some[i]]
+            rslt.append(get_url_from_form(form,**kwargs))
+        return(rslt)
+    else:
+        rslt = []
+        for i in range(0,forms.__len__()):
+            form = forms[i]
+            rslt.append(get_url_from_form(form,**kwargs))
+        return(rslt)
 
 
 def get_form_inputs(ic,**kwargs):

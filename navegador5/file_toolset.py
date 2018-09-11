@@ -142,6 +142,9 @@ def walkall_files(dirpath=os.getcwd()):
 
 #def file_recursive_rename
 
+#find all subdirs recursively
+
+
 
 
 #替换父目录的名字，祖父以上层级目录不变
