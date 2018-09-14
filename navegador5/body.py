@@ -24,6 +24,12 @@ from pyquery import PyQuery as pq
 #
 import xxurl.xxurl as xuxu
 
+##############################
+def pquery_ic(ic,jpath):
+    html_text = ic['resp_body_text']
+    d = pq(html_text)
+    batches = d(jpath)
+    return(batches)
 
 
 ##

@@ -1,7 +1,7 @@
 import random
 import time
 import datetime
-
+import re
 
 def jQuery_random_number(bits_num = 17,result_format='str'):
     r = random.random();
@@ -70,4 +70,12 @@ def jQuery_get_utcOffset(unit="min",result_format='str'):
         return(utcOffset.__str__())
     else:
         return(utcOffset)
+
+def jQuery_get_jsonp_params(ic):
+    regex = re.compile('\[.*\]')
+    txt = ic['resp_body_text']
+    m = regex.search(txt)
+    arr = json.loads(m.group(0))
+    return(arr)
+
 
