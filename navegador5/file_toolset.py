@@ -39,6 +39,16 @@ def read_json(**kwargs):
     js = json.loads(rslt)
     return(js)
 
+
+def read_json_rplus(fn):
+    fd = open(fn,'r+')
+    raw = fd.read()
+    fd.close()
+    d = json.loads(raw)
+    return(d)
+
+
+
 def file_replace_string(src,dst,**kwargs):
     if('rop' in kwargs):
         rop = kwargs['rop']
