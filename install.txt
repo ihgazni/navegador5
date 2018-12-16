@@ -1,1 +1,1 @@
-/usr/local/lib/python3.6/dist-packages/navegador5-0.59-py3.6.egg
+/usr/local/lib/python3.6/dist-packages/navegador5-0.60-py3.6.egg
