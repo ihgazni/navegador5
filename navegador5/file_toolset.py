@@ -34,6 +34,15 @@ def read_file_content(**kwargs):
     fd.close()
     return(rslt)
 
+def readfile(fn):
+    fd = open(fn,'r+')
+    rslt = fd.read()
+    fd.close()
+    return(rslt)
+
+
+
+
 def read_json(**kwargs):
     rslt = read_file_content(**kwargs)
     js = json.loads(rslt)
@@ -47,6 +56,12 @@ def read_json_rplus(fn):
     d = json.loads(raw)
     return(d)
 
+
+def write_json_wplus(fn,js):
+    fd = open(fn,'w+')
+    s = json.dumps(js)
+    fd.write(s)
+    fd.close()
 
 
 def file_replace_string(src,dst,**kwargs):

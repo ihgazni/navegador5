@@ -23,6 +23,14 @@ from pyquery import PyQuery as pq
 
 #
 import xxurl.xxurl as xuxu
+#
+import copy
+import lxml
+import lxml.sax
+import lxml.etree as lexml
+import elist.elist as elel
+from io import StringIO
+from xml.sax.handler import ContentHandler
 
 ##############################
 def pquery_ic(ic,jpath):
@@ -573,6 +581,48 @@ def etree_descedants_depth(node,withpathinfo=0):
         return(depth)
 
 
+
+
+def pathlist(node):
+    pl = [each.tag for each in node.iterancestors()]
+    pl.reverse()
+    pl.append(node.tag)
+    return(pl)
+
+def source(root,codec='utf-8'):
+    print(etree.tostring(root).decode(codec))
+
+def plget(root,*args):
+    args = list(args)
+    if(isinstance(args[0],list)):
+        pl = args[0]
+    else:
+        pl = args
+    xpath = elel.join(pl,'/')
+    return(root.xpath(xpath))
+
+
+def dscdntpls(node,rel=False):
+    unhandled = [node]
+    next_unhandled = []
+    pls = []
+    while(unhandled.__len__()>0):
+        for i in range(0,unhandled.__len__()):
+            each_node = unhandled[i]
+            children = each_node.getchildren()
+            if(children.__len__() == 0):
+                patharr = pathlist(each_node)
+                pls.append(patharr)
+            else:
+                next_unhandled = next_unhandled + children
+        unhandled = next_unhandled
+        next_unhandled = []
+    if(rel==True):
+        lngth = pathlist(item).__len__()
+        pls = elel.mapv(pls,lambda rslt:rslt[lngth:],[])
+    else:
+        pass
+    return(pls)
 #####
 
 def etree_siblings_info(node):
@@ -1171,4 +1221,80 @@ def dropDownList(ele):
     return(rslt)
 
 
+####
+class DFS(ContentHandler):
+    @classmethod
+    def attrl2tl(cls,attrl):
+        tl = []
+        for i in range(attrl.__len__()):
+            attr = attrl[i]
+            if(attr.__len__() == 0):
+                tl.append(tuple([]))
+            else:
+                tl.append((attr[0][0][1],attr[0][1]))
+        return(tl)
+    @classmethod
+    def attrl2dl(cls,attrl):
+        dl = []
+        for i in range(attrl.__len__()):
+            attr = attrl[i]
+            if(attr.__len__() == 0):
+                dl.append({})
+            else:
+                d = {}
+                d[attr[0][0][1]] = attr[0][1]
+                dl.append(d)
+        return(dl)
+    def __init__(self):
+        self.full_attrib = False
+        self.pls = []
+        self.attribs = []
+        self.currpl =[]
+        self.currattribl = []
+        self.datas = []
+        self.currdatal = []
+        self.texts_inseq = []
+    def startElementNS(self, name, qname, attributes):
+        self.currdatal.append(None)
+        self.currpl.append(qname)
+        self.currattribl.append(attributes.items())
+    def endElementNS(self, ns_name, qname):
+        #####
+        index = elel.index_last(self.currdatal,None)
+        data = copy.deepcopy(self.currdatal[(index+1):])
+        self.datas.append(data)
+        self.currdatal = copy.deepcopy(self.currdatal[:index])
+        #####
+        pl = copy.deepcopy(self.currpl)
+        self.pls.append(pl)
+        self.currpl.pop(-1)
+        #####
+        attribl = copy.deepcopy(self.currattribl)
+        if(self.full_attrib):
+            tl = self.attrl2tl(attribl)
+            self.attribs.append(tl)
+        else:
+            dl = self.attrl2dl(attribl)
+            self.attribs.append(dl[-1])
+        self.currattribl.pop(-1)
+        #####
+    def characters(self, data):
+        pl = copy.deepcopy(self.currpl)
+        self.currdatal.append((pl,data))
+        self.texts_inseq.append((pl,data))
 
+
+def dfspls(xml_str):
+    try:
+        f = StringIO(xml_str)
+        tree = lexml.parse(f)
+    except:
+        tree = lexml.HTML(xml_str)
+    else:
+        pass
+    handler = DFS()
+    lxml.sax.saxify(tree, handler)
+    return(handler)
+
+
+####
